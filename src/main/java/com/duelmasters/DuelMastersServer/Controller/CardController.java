@@ -1,19 +1,22 @@
 package com.duelmasters.DuelMastersServer.Controller;
 
-import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
-import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
-import lombok.AllArgsConstructor;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
+import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
 
 @RestController
 //@AllArgsConstructor
@@ -32,8 +35,11 @@ public class CardController {
         return cardService.getAllCards();
     }
     
-    @PostMapping("/add")
-    public ResponseEntity<Object> createCard(@RequestBody Card card){
+    @PostMapping(value = "/add", consumes = { "multipart/form-data" })
+    public ResponseEntity<Object> createCard(@RequestPart Card card, 
+    		@RequestPart("file") MultipartFile file) throws IOException{
+    	byte [] byteArr=file.getBytes();
+    	card.setImage(byteArr);
     	cardService.createCard(card);
     	return new ResponseEntity<>(card, HttpStatus.OK);
     }
