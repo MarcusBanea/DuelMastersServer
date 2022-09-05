@@ -3,6 +3,7 @@ package com.duelmasters.DuelMastersServer.Domain.Entity.cards;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Data;
 
@@ -26,14 +27,18 @@ public class Card {
 
 	private Integer breakerNumber;
 
-	private Boolean isEvolution;
+	@Field("type")
+	private String type;
 
 	private String ability;
+
+	@Field("rarity")
+	private Integer rarity;
 
 	private byte[] image;
 
 	public Card(String name, String cardRealm, String cardClass, Integer mana, Integer power, Integer breakerNumber,
-			Boolean isEvolution, String ability, byte[] image) {
+			String type, String ability, Integer rarity, byte[] image) {
 		super();
 		this.name = name;
 		this.cardRealm = cardRealm;
@@ -41,9 +46,28 @@ public class Card {
 		this.mana = mana;
 		this.power = power;
 		this.breakerNumber = breakerNumber;
-		this.isEvolution = isEvolution;
+		this.type = type;
 		this.ability = ability;
+		this.rarity = rarity;
 		this.image = image;
 	}
+
+	@Override
+	public String toString() {
+		return "Card: [name = " + name + "]\n";
+	}
+
+//	@Override
+//	public String toString() {
+//		return "Card [name = " + name + "\ncardRealm = " + cardRealm + "\ncardClass = " + cardClass + "\nmana = " + mana
+//				+ "\npower = " + power + "\nbreakerNumber = " + breakerNumber + "\ntype = " + type + "\nability = " + ability
+//				+ "\nrarity = " + rarity + "]\n";
+//	}
+	
+	
+	
+	
+	
+	
 
 }
