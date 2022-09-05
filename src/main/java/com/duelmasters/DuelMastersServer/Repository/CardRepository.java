@@ -38,4 +38,13 @@ public interface CardRepository extends MongoRepository<Card, String> {
 	
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$gt : :#{#rarity}}}}" })
 	List<Card> findCardsWithHigherRarity(@Param("rarity") Long minRarity);
+	
+	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$lt : :#{#rarity}}}}", "{'$sample' : {size: 1}}" })
+	Card getRandomCardWithMaxRarity(@Param("rarity") Long maxRarity);
+	
+	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$gt : :#{#rarity}}}}", "{'$sample' : {size: 1}}" })
+	Card getRandomCardWithMinRarity(@Param("rarity") Long minRarity);
+	
+	@Aggregation(pipeline = { "{'$match' : {'rarity' : :#{#rarity}}}", "{'$sample' : {size: 1}}" })
+	Card getRandomCardWithExactRarity(@Param("rarity") Long rarity);
 }

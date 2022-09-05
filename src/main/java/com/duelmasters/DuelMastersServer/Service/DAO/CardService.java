@@ -10,8 +10,6 @@ public interface CardService {
     
     public Card createCard(Card card);
     
-    public Card getRandomCard(Long maxRarity);
-    
     public List<Card> getAllLegendaryCards();
     
     public List<Card> getAllSuperRareCards();
@@ -23,4 +21,18 @@ public interface CardService {
     public List<Card> getAllUncommonCards();
     
     public List<Card> getAllCommonCards();
+    
+    public Card getRandomCommonCard();
+    
+    public Card getRandomUncommonCard();
+    
+    public Card getRandomRareCard();
+    
+    public Card getRandomVeryRareCard();
+    
+    public Card getRandomSuperRareCard();
+    
+    public Card getRandomLegendaryCard();
+    
+    public Card getRandomCardWithMaxRarity(Long rarity);
 }

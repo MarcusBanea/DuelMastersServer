@@ -29,14 +29,6 @@ public class CardServiceImplementation implements CardService {
 		return card;
 	}
 
-	public Card getRandomCard(Long maxRarity) {
-		Long numberOfCards = cardRepository.countByRarity(maxRarity);
-		int randomCardIndex = (int) (Math.random() * numberOfCards);
-		Pageable card = PageRequest.of(randomCardIndex, 1);
-		Card randomCard = cardRepository.findAll(card).getContent().get(0);
-		return randomCard;
-	}
-
 	public List<Card> getAllLegendaryCards() {
 		return cardRepository.findCardsWithExactRarity(100L);
 	}
@@ -60,4 +52,45 @@ public class CardServiceImplementation implements CardService {
 	public List<Card> getAllCommonCards() {
 		return cardRepository.findCardsWithExactRarity(0L);
 	}
+
+	@Override
+	public Card getRandomCardWithMaxRarity(Long rarity) {
+		return cardRepository.getRandomCardWithMaxRarity(rarity);
+	}
+
+	
+	@Override
+	public Card getRandomCommonCard() {
+		return cardRepository.getRandomCardWithExactRarity(0L);
+	}
+
+	
+	@Override
+	public Card getRandomUncommonCard() {
+		return cardRepository.getRandomCardWithExactRarity(30L);
+	}
+
+	
+	@Override
+	public Card getRandomRareCard() {
+		return cardRepository.getRandomCardWithExactRarity(50L);
+	}
+
+	
+	@Override
+	public Card getRandomVeryRareCard() {
+		return cardRepository.getRandomCardWithExactRarity(70L);
+	}
+
+	
+	@Override
+	public Card getRandomSuperRareCard() {
+		return cardRepository.getRandomCardWithExactRarity(90L);
+	}
+
+	@Override
+	public Card getRandomLegendaryCard() {
+		return cardRepository.getRandomCardWithExactRarity(100L);
+	}
+
 }
