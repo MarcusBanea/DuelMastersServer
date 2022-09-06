@@ -2,8 +2,6 @@ package com.duelmasters.DuelMastersServer.Service.Implementation;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;

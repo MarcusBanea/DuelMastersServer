@@ -8,7 +8,7 @@ import lombok.Data;
 public class Pack {
 
 	@Id
-	private Long id;
+	private String id;
 
 	private String name;
 	private Integer totalNumberOfCards;
@@ -27,9 +27,11 @@ public class Pack {
 	private Integer numberOfSuperRareCards;
 	private Integer numberOfLegendaryCards;
 
+	private byte[] image;
+
 	public Pack(String name, Integer totalNumberOfCards, Integer numberOfCommonCards, Integer numberOfUncommonCards,
 			Integer numberOfRareCards, Integer numberOfVeryRareCards, Integer numberOfSuperRareCards,
-			Integer numberOfLegendaryCards) {
+			Integer numberOfLegendaryCards, byte[] image) {
 		super();
 		this.name = name;
 		this.totalNumberOfCards = totalNumberOfCards;
@@ -39,6 +41,7 @@ public class Pack {
 		this.numberOfVeryRareCards = numberOfVeryRareCards;
 		this.numberOfSuperRareCards = numberOfSuperRareCards;
 		this.numberOfLegendaryCards = numberOfLegendaryCards;
+		this.image = image;
 	}
 
 }
