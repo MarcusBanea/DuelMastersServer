@@ -33,12 +33,12 @@ public class Card {
 	private String ability;
 
 	@Field("rarity")
-	private Integer rarity;
+	private String rarity;
 
 	private byte[] image;
 
 	public Card(String name, String cardRealm, String cardClass, Integer mana, Integer power, Integer breakerNumber,
-			String type, String ability, Integer rarity, byte[] image) {
+			String type, String ability, String rarity, byte[] image) {
 		super();
 		this.name = name;
 		this.cardRealm = cardRealm;
@@ -54,8 +54,13 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return "Card: [name = " + name + "]\n";
+		return "Card [name=" + name + ", rarity=" + rarity + "]\n";
 	}
+
+//	@Override
+//	public String toString() {
+//		return "Card: [name = " + name + "]\n";
+//	}
 
 //	@Override
 //	public String toString() {

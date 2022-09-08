@@ -31,20 +31,24 @@ public interface CardRepository extends MongoRepository<Card, String> {
 	List<Card> findSpells();
 
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : :#{#rarity}}}" })
-	List<Card> findCardsWithExactRarity(@Param("rarity") Long rarity);
+	List<Card> findCardsWithExactRarity(@Param("rarity") String rarity);
+	
+	/*
 	
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$lt : :#{#rarity}}}}" })
-	List<Card> findCardsWithLowerRarity(@Param("rarity") Long maxRarity);
+	List<Card> findCardsWithLowerRarity(@Param("rarity") String maxRarity);
 	
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$gt : :#{#rarity}}}}" })
-	List<Card> findCardsWithHigherRarity(@Param("rarity") Long minRarity);
+	List<Card> findCardsWithHigherRarity(@Param("rarity") String minRarity);
 	
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$lt : :#{#rarity}}}}", "{'$sample' : {size: 1}}" })
-	Card getRandomCardWithMaxRarity(@Param("rarity") Long maxRarity);
+	Card getRandomCardWithMaxRarity(@Param("rarity") String maxRarity);
 	
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : {$gt : :#{#rarity}}}}", "{'$sample' : {size: 1}}" })
-	Card getRandomCardWithMinRarity(@Param("rarity") Long minRarity);
+	Card getRandomCardWithMinRarity(@Param("rarity") String minRarity);
+	
+	*/
 	
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : :#{#rarity}}}", "{'$sample' : {size: 1}}" })
-	Card getRandomCardWithExactRarity(@Param("rarity") Long rarity);
+	Card getRandomCardWithExactRarity(@Param("rarity") String rarity);
 }

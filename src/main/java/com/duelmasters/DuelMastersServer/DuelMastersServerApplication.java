@@ -6,12 +6,22 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
+import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
 
 @SpringBootApplication
 public class DuelMastersServerApplication {
+	
+	static UserService userService;
+	
+	public DuelMastersServerApplication(UserService service) {
+		userService = service;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(DuelMastersServerApplication.class, args);
+		
+		//User user = new User("Markus", "markus@email.com", "TheLegend27", null, 10000, null, null);
+		//userService.createUser(user);
 	}
 
 	@Bean

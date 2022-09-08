@@ -5,11 +5,13 @@ import java.util.List;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 
 public interface CardService {
+	
+	public Card getCard(String id);
 
     public List<Card> getAllCards();
     
     public Card createCard(Card card);
-    
+        
     public List<Card> getAllLegendaryCards();
     
     public List<Card> getAllSuperRareCards();
@@ -34,5 +36,5 @@ public interface CardService {
     
     public Card getRandomLegendaryCard();
     
-    public Card getRandomCardWithMaxRarity(Long rarity);
+    public Card updateCard(String cardId, Card newCard);
 }

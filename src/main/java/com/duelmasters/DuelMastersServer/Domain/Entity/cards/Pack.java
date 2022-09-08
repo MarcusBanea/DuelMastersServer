@@ -13,6 +13,8 @@ public class Pack {
 	private String name;
 	private Integer totalNumberOfCards;
 
+	private Integer price;
+
 //	private Double commonCardProbability;
 //	private Double uncommonCardProbability;
 //	private Double rareCardProbability;
@@ -29,12 +31,13 @@ public class Pack {
 
 	private byte[] image;
 
-	public Pack(String name, Integer totalNumberOfCards, Integer numberOfCommonCards, Integer numberOfUncommonCards,
-			Integer numberOfRareCards, Integer numberOfVeryRareCards, Integer numberOfSuperRareCards,
-			Integer numberOfLegendaryCards, byte[] image) {
+	public Pack(String name, Integer totalNumberOfCards, Integer price, Integer numberOfCommonCards,
+			Integer numberOfUncommonCards, Integer numberOfRareCards, Integer numberOfVeryRareCards,
+			Integer numberOfSuperRareCards, Integer numberOfLegendaryCards, byte[] image) {
 		super();
 		this.name = name;
 		this.totalNumberOfCards = totalNumberOfCards;
+		this.price = price;
 		this.numberOfCommonCards = numberOfCommonCards;
 		this.numberOfUncommonCards = numberOfUncommonCards;
 		this.numberOfRareCards = numberOfRareCards;
@@ -42,6 +45,11 @@ public class Pack {
 		this.numberOfSuperRareCards = numberOfSuperRareCards;
 		this.numberOfLegendaryCards = numberOfLegendaryCards;
 		this.image = image;
+	}
+
+	@Override
+	public String toString() {
+		return "Pack [name=" + name + ", totalNumberOfCards=" + totalNumberOfCards + ", price=" + price + "]\n";
 	}
 
 }
