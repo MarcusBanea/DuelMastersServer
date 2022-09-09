@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
 import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
@@ -23,6 +24,9 @@ class DuelMastersServerApplicationTests {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	MapperDTO mapper;
 	
 	@Test
 	void contextLoads() {
@@ -109,21 +113,35 @@ class DuelMastersServerApplicationTests {
 		//User user = new User("Markus", "markus@email.com", "TheLegend27", null, 10000, 1, 0, null, null);
 		//userService.createUser(user);
 		
-		/*
-		User user = userService.getUser("6319e0650ba2f85a47f317a1");
-		System.out.println(user);
 		
-		List<Card> cardsOfPack = packService.openPackType("BronzePack");
-		user = userService.addCardsToCollection(user, cardsOfPack);
+//		User user = userService.getUser("631b10bc5f56771e8167ee17");
+//		System.out.println(user);
+//		
+//		user = userService.openPack(user, "Bronze Pack");
+//		user = userService.openPack(user, "Gold Pack");
+//		System.out.println(user);
 		
-		cardsOfPack = packService.openPackType("GoldPremiumPack");
-		user = userService.addCardsToCollection(user, cardsOfPack);
 		
-		cardsOfPack = packService.openPackType("RubyPack");
-		user = userService.addCardsToCollection(user, cardsOfPack);
 		
-		System.out.println(user.getCollection());
-		*/
+//		List<Card> cardsOfPack = packService.openPackType("BronzePack");
+//		user = userService.addCardsToCollection(user, cardsOfPack);
+//		
+//		cardsOfPack = packService.openPackType("GoldPremiumPack");
+//		user = userService.addCardsToCollection(user, cardsOfPack);
+//		
+//		cardsOfPack = packService.openPackType("RubyPack");
+//		user = userService.addCardsToCollection(user, cardsOfPack);
+		
+//		UserCollectionDTO userDTO = mapper.userToUserCollectionDTO(user);
+//	
+//		System.out.println("Collection:\n");
+//		for(String cardId : userDTO.getCollection()) {
+//			Card card = cardService.getCard(cardId);
+//			System.out.println(card.getName() + " --- " + card.getRarity());
+//		}
+		
+		//System.out.println(userService.getUser("6319e0650ba2f85a47f317a1").getCollection());
+		
 
 	}
 	

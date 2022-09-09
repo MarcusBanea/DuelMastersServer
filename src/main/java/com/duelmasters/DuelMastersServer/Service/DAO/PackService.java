@@ -9,6 +9,10 @@ public interface PackService {
 
 	public Pack createPack(Pack pack);
 	
+	public Pack getPack(String id);
+	
+	public Pack getPackByName(String name);
+	
 	public List<Pack> getAllPacks();
 	
 	public List<Card> openPack(Pack pack);

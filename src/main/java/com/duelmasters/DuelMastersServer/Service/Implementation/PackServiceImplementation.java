@@ -27,6 +27,16 @@ public class PackServiceImplementation implements PackService {
 	}
 
 	@Override
+	public Pack getPack(String id) {
+		return packRepository.findById(id).get();
+	}
+
+	@Override
+	public Pack getPackByName(String name) {
+		return packRepository.findByName(name);
+	}
+
+	@Override
 	public List<Pack> getAllPacks() {
 		return packRepository.findAll();
 	}
@@ -34,23 +44,35 @@ public class PackServiceImplementation implements PackService {
 	@Override
 	public List<Card> openPack(Pack pack) {
 		List<Card> cards = new ArrayList<>();
-		for (int i = 0; i < pack.getNumberOfCommonCards(); i++) {
-			cards.add(cardService.getRandomCommonCard());
+		if (pack.getNumberOfCommonCards() != null) {
+			for (int i = 0; i < pack.getNumberOfCommonCards(); i++) {
+				cards.add(cardService.getRandomCommonCard());
+			}
 		}
-		for (int i = 0; i < pack.getNumberOfUncommonCards(); i++) {
-			cards.add(cardService.getRandomUncommonCard());
+		if (pack.getNumberOfUncommonCards() != null) {
+			for (int i = 0; i < pack.getNumberOfUncommonCards(); i++) {
+				cards.add(cardService.getRandomUncommonCard());
+			}
 		}
-		for (int i = 0; i < pack.getNumberOfRareCards(); i++) {
-			cards.add(cardService.getRandomRareCard());
+		if (pack.getNumberOfRareCards() != null) {
+			for (int i = 0; i < pack.getNumberOfRareCards(); i++) {
+				cards.add(cardService.getRandomRareCard());
+			}
 		}
-		for (int i = 0; i < pack.getNumberOfVeryRareCards(); i++) {
-			cards.add(cardService.getRandomVeryRareCard());
+		if (pack.getNumberOfVeryRareCards() != null) {
+			for (int i = 0; i < pack.getNumberOfVeryRareCards(); i++) {
+				cards.add(cardService.getRandomVeryRareCard());
+			}
 		}
-		for (int i = 0; i < pack.getNumberOfSuperRareCards(); i++) {
-			cards.add(cardService.getRandomSuperRareCard());
+		if (pack.getNumberOfSuperRareCards() != null) {
+			for (int i = 0; i < pack.getNumberOfSuperRareCards(); i++) {
+				cards.add(cardService.getRandomSuperRareCard());
+			}
 		}
-		for (int i = 0; i < pack.getNumberOfLegendaryCards(); i++) {
-			cards.add(cardService.getRandomLegendaryCard());
+		if (pack.getNumberOfLegendaryCards() != null) {
+			for (int i = 0; i < pack.getNumberOfLegendaryCards(); i++) {
+				cards.add(cardService.getRandomLegendaryCard());
+			}
 		}
 		return cards;
 	}
@@ -109,7 +131,7 @@ public class PackServiceImplementation implements PackService {
 			cards = openPack(shoguPack);
 			break;
 		}
-		
+
 		}
 		return cards;
 	}

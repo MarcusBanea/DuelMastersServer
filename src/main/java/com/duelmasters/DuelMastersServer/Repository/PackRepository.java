@@ -6,4 +6,6 @@ import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Pack;
 
 public interface PackRepository extends MongoRepository<Pack, String>{
 	
+	public Pack findByName(String name);
+	
 }
