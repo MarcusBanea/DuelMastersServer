@@ -35,10 +35,10 @@ public class Card {
 	@Field("rarity")
 	private String rarity;
 
-	private byte[] image;
+	private String imageId;
 
 	public Card(String name, String cardRealm, String cardClass, Integer mana, Integer power, Integer breakerNumber,
-			String type, String ability, String rarity, byte[] image) {
+			String type, String ability, String rarity, String imageId) {
 		super();
 		this.name = name;
 		this.cardRealm = cardRealm;
@@ -49,7 +49,7 @@ public class Card {
 		this.type = type;
 		this.ability = ability;
 		this.rarity = rarity;
-		this.image = image;
+		this.imageId = imageId;
 	}
 
 	@Override

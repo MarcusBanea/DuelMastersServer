@@ -121,13 +121,15 @@ public class CardServiceImplementation implements CardService {
 		if(newCard.getRarity() != null) {
 			card.setRarity(newCard.getRarity());
 		}
-		if(newCard.getImage() != null) {
-			card.setImage(newCard.getImage());
+		if(newCard.getImageId() != null) {
+			card.setImageId(newCard.getImageId());
 		}
 		cardRepository.save(card);
 		return card;
 	}
 	
-	
+	public void deleteCard(String id) {
+		cardRepository.deleteById(id);
+	}
 
 }

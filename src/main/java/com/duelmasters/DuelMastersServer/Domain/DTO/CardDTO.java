@@ -6,6 +6,6 @@ import lombok.Data;
 public class CardDTO {
 	
 	private String name;
-	private byte[] image;
+	private String imageId;
 	
 }

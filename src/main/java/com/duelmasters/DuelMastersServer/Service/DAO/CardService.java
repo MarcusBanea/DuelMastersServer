@@ -37,4 +37,6 @@ public interface CardService {
     public Card getRandomLegendaryCard();
     
     public Card updateCard(String cardId, Card newCard);
+    
+    public void deleteCard(String id);
 }

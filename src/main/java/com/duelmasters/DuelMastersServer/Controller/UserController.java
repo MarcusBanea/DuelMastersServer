@@ -40,5 +40,8 @@ public class UserController {
 		List<Card> cardsOfPack = userService.openPack(userService.getUser(id), packType);
 		return new ResponseEntity<>(cardsOfPack, HttpStatus.OK);
 	}
+	
+	//@GetMapping(value = "/storePack")
+	
 
 }

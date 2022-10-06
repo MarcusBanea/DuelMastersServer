@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -18,6 +20,7 @@ import com.duelmasters.DuelMastersServer.Domain.DTO.CardDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
+import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
 
 @RestController
 //@AllArgsConstructor
@@ -25,11 +28,13 @@ import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
 public class CardController {
 
 	private CardService cardService;
+	private FileService fileService;
 	private MapperDTO mapper;
 
 	@Autowired
-	public CardController(CardService cardService, MapperDTO mapperDTO) {
+	public CardController(CardService cardService, FileService fileService, MapperDTO mapperDTO) {
 		this.cardService = cardService;
+		this.fileService = fileService;
 		this.mapper = mapperDTO;
 	}
 
@@ -41,8 +46,9 @@ public class CardController {
 	@PostMapping(value = "/add", consumes = { "multipart/form-data" })
 	public ResponseEntity<Object> createCard(@RequestPart Card card, @RequestPart("file") MultipartFile file)
 			throws IOException {
-		byte[] byteArr = file.getBytes();
-		card.setImage(byteArr);
+//		byte[] byteArr = file.getBytes();
+//		card.setImage(byteArr);
+		card.setImageId(fileService.uploadFile(file));
 		cardService.createCard(card);
 		return new ResponseEntity<>(card, HttpStatus.OK);
 	}
@@ -81,5 +87,11 @@ public class CardController {
 	public ResponseEntity<Object> getAllCommonCards() {
 		List<CardDTO> cards = cardService.getAllCommonCards().stream().map(mapper::cardToCardDTO).collect(Collectors.toList());
 		return new ResponseEntity<>(cards, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "/delete/{id}")
+	public void deleteCardById(@PathVariable String id) throws IOException {
+		fileService.deleteFile(cardService.getCard(id).getImageId());
+		cardService.deleteCard(id);
 	}
 }
