@@ -1,6 +1,6 @@
 package com.duelmasters.DuelMastersServer.Domain.DTO;
 
-import java.util.List;
+import java.util.HashMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class UserCollectionDTO extends UserDTO {
 
-	private List<String> collection;
+	private HashMap<String, Integer> collection;
 
 	public UserCollectionDTO() {
 		super();

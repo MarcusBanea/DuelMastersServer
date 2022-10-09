@@ -1,5 +1,6 @@
 package com.duelmasters.DuelMastersServer.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class UserController {
 	public ResponseEntity<Object> openPack(@PathVariable String userId, @RequestParam String packType) {
 		List<String> cardsOfPack = userService.openPack(userId, packType);
 		return new ResponseEntity<>(cardsOfPack, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getCollection/{userId}")
+	public ResponseEntity<Object> getUserCollection(@PathVariable String userId) {
+		HashMap<String, Integer> collection = userService.getUserCollection(userId);
+		return new ResponseEntity<>(collection, HttpStatus.OK);
 	}
 	
 }

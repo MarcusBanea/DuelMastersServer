@@ -1,5 +1,6 @@
 package com.duelmasters.DuelMastersServer.Domain.Entity.cards;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -22,11 +23,11 @@ public class User {
 	private Integer level;
 	private Integer xp;
 
-	private List<String> collection;
+	private HashMap<String, Integer> collection;
 	private List<String> deck;
 
 	public User(String username, String email, String nickname, byte[] image, Integer money, Integer level, Integer xp,
-			List<String> collection, List<String> deck) {
+			HashMap<String, Integer> collection, List<String> deck) {
 		super();
 		this.username = username;
 		this.email = email;
