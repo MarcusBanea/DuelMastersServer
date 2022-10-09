@@ -1,10 +1,9 @@
 package com.duelmasters.DuelMastersServer.Service.Implementation;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class UserServiceImplementation implements UserService {
 
 	private UserRepository userRepository;
 	private PackService packService;
-
+	
 	@Override
 	public User createUser(User user) {
 		return userRepository.save(user);
@@ -40,49 +39,34 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public List<Card> openPack(User user, String packType) {
-		List<Card> cards = new ArrayList<>();
-
+	public List<String> openPack(String userId, String packType) {
+		User user = userRepository.findById(userId).get();
 		Pack pack = packService.getPackByName(packType);
+		
 		if (user.getMoney() >= pack.getPrice()) {
-			cards = packService.openPack(pack);
-			//addCardsToCollection(user, cards);
 			user.setMoney(user.getMoney() - pack.getPrice());
+			
+			List<String> cards = new ArrayList<>();
+			cards = packService.openPack(pack).stream().map(Card::getId).collect(Collectors.toList());
+			
+			user = addCardsToCollection(user, cards);
 			userRepository.save(user);
 			return cards;
+			
 		}
 		//exception
-		return cards;
-	}
-	
-	@Override
-	public User storeCardsFromPack(User user, List<Card> cards) {
-		user = addCardsToCollection(user, cards);
-		return user;
+		return null;
 	}
 
-	@Override
-	public User addCardsToCollection(User user, List<Card> cards) {
-		List<Card> currentCollection = user.getCollection();
+	private User addCardsToCollection(User user, List<String> cardsIds) {
+		List<String> currentCollection = user.getCollection();
 		if (currentCollection != null) {
-			currentCollection.addAll(cards);
+			currentCollection.addAll(cardsIds);
 			user.setCollection(currentCollection);
 		} else {
-			user.setCollection(cards);
+			user.setCollection(cardsIds);
 		}
-
-		Collections.sort(user.getCollection(), new Comparator<Card>() {
-			@Override
-			public int compare(Card c1, Card c2) {
-				if(c1.getRarity().compareTo(c2.getRarity()) != 0) {
-					return c1.getRarity().compareTo(c2.getRarity());
-				}
-				return c1.getName().compareTo(c2.getName());
-			}
-		});
-		user.setCollection(user.getCollection());
-		// userRepository.save(user);
 		return user;
 	}
-
+	
 }

@@ -1,14 +1,10 @@
 package com.duelmasters.DuelMastersServer;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
-import com.duelmasters.DuelMastersServer.Domain.DTO.UserCollectionDTO;
-import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
@@ -114,40 +110,36 @@ class DuelMastersServerApplicationTests {
 	
 	@Test
 	void testUser() {
-//		
-//		// user = new User("Markus", "markus@email.com", "TheLegend27", null, 10000, 1, 0, null, null);
-//		//userService.createUser(user);
-//		
-//		
-//		User user = userService.getUser("631b10bc5f56771e8167ee17");
+		
+//		User user = userService.getUser("633f18459af2fa78268b91d4");
 //		System.out.println(user);
+		
+		//User user = new User("Markus", "markus@email.com", "TheLegend27", null, 999999999, 1, 0, null, null);
+		//userService.createUser(user);
+		
+//		String userId = "633f18459af2fa78268b91d4";
 //		
-////		user = userService.openPack(user, "Bronze Pack");
-////		user = userService.openPack(user, "Gold Pack");
-////		System.out.println(user);
+//		userService.openPack(userId, "Bronze Pack");
+//		//user = userService.addCardsToCollection(user, cardsOfPack);
+//		//userService.storeCardsFromPack(user, cardsOfPack);
 //		
+//		userService.openPack(userId, "Gold Premium Pack");
+//		//user = userService.addCardsToCollection(user, cardsOfPack);
+//		//userService.storeCardsFromPack(user, cardsOfPack);
 //		
+//		userService.openPack(userId, "Ruby Pack");
+//		//user = userService.addCardsToCollection(user, cardsOfPack);
+//		//userService.storeCardsFromPack(user, cardsOfPack);
 //		
-//		List<Card> cardsOfPack = packService.openPackType("Bronze Pack");
-//		user = userService.addCardsToCollection(user, cardsOfPack);
-//		
-////		cardsOfPack = packService.openPackType("Gold Premium Pack");
-////		user = userService.addCardsToCollection(user, cardsOfPack);
-////		
-////		cardsOfPack = packService.openPackType("Ruby Pack");
-////		user = userService.addCardsToCollection(user, cardsOfPack);
-//		
-//		UserCollectionDTO userDTO = mapper.userToUserCollectionDTO(user);
-//	
+//		UserCollectionDTO user = mapper.userToUserCollectionDTO(userService.getUser(userId));
+//		System.out.println(user);
+//			
 //		System.out.println("Collection:\n");
-//		for(String cardId : userDTO.getCollection()) {
+//		for(String cardId : user.getCollection()) {
 //			Card card = cardService.getCard(cardId);
 //			System.out.println(card.getName() + " --- " + card.getRarity());
 //		}
-//		
-//		System.out.println(userService.getUser("6319e0650ba2f85a47f317a1").getCollection());
-//		
-
+		
 	}
 	
 	@Test

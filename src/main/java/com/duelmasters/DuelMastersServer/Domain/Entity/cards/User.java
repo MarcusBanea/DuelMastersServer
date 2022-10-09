@@ -22,11 +22,11 @@ public class User {
 	private Integer level;
 	private Integer xp;
 
-	private List<Card> collection;
-	private List<Deck> deck;
+	private List<String> collection;
+	private List<String> deck;
 
 	public User(String username, String email, String nickname, byte[] image, Integer money, Integer level, Integer xp,
-			List<Card> collection, List<Deck> deck) {
+			List<String> collection, List<String> deck) {
 		super();
 		this.username = username;
 		this.email = email;
@@ -37,6 +37,10 @@ public class User {
 		this.xp = xp;
 		this.collection = collection;
 		this.deck = deck;
+	}
+	
+	public User() {
+		
 	}
 
 	@Override

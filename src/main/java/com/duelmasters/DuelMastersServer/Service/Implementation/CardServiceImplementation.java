@@ -1,12 +1,16 @@
 package com.duelmasters.DuelMastersServer.Service.Implementation;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.duelmasters.DuelMastersServer.Domain.DTO.CardWithImageDTO;
+import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
+import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
 
 import lombok.AllArgsConstructor;
 
@@ -15,10 +19,20 @@ import lombok.AllArgsConstructor;
 public class CardServiceImplementation implements CardService {
 
 	private CardRepository cardRepository;
+	private MapperDTO mapper;
+	private FileService fileService;
 	
 	@Override
 	public Card getCard(String id) {
 		return cardRepository.findById(id).get();
+	}
+	
+	@Override
+	public CardWithImageDTO getCardWithImage(String id) throws IOException {
+		Card card = cardRepository.findById(id).get();
+		CardWithImageDTO cardDTO = mapper.cardToCardWithImageDTO(card);
+		cardDTO.setImageBytes(fileService.downloadFile(card.getImageId()).getContent());
+		return cardDTO;
 	}
 
 	@Override

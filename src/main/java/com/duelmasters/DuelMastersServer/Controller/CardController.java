@@ -37,6 +37,17 @@ public class CardController {
 		this.fileService = fileService;
 		this.mapper = mapperDTO;
 	}
+	
+	@GetMapping(value = "/getOne/{cardId}")
+	public ResponseEntity<Object> getCard(@PathVariable String cardId) {
+		return new ResponseEntity<>(cardService.getCard(cardId), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getOneWithImage/{cardId}")
+	public ResponseEntity<Object> getCardWithImage(@PathVariable String cardId) throws IOException{
+		return new ResponseEntity<>(cardService.getCardWithImage(cardId), HttpStatus.OK);
+	}
+	
 
 	@GetMapping
 	public List<Card> getAll() {

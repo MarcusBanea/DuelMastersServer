@@ -1,12 +1,16 @@
 package com.duelmasters.DuelMastersServer.Service.DAO;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.duelmasters.DuelMastersServer.Domain.DTO.CardWithImageDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 
 public interface CardService {
 	
 	public Card getCard(String id);
+	
+	public CardWithImageDTO getCardWithImage(String id) throws IOException;
 
     public List<Card> getAllCards();
     

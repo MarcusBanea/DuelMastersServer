@@ -18,5 +18,5 @@ public interface PackService {
 	public List<Card> openPack(Pack pack);
 	
 	public List<Card> openPackType(String packType);
-	
+		
 }
