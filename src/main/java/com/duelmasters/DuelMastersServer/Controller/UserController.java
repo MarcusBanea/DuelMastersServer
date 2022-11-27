@@ -1,5 +1,6 @@
 package com.duelmasters.DuelMastersServer.Controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,4 +68,13 @@ public class UserController {
 		return new ResponseEntity<>(collection, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/getRandomDeck/{userId}")
+	public ResponseEntity<Object> getUserRandomDeck(@PathVariable String userId) {
+		return new ResponseEntity<>(userService.generateRandomDeckFromCollection(userId, 25), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getRandomDeckWithGameCards/{userId}")
+	public ResponseEntity<Object> getUserRandomDeckWithGameCards(@PathVariable String userId) throws IOException {
+		return new ResponseEntity<>(userService.generateRandomDeckFromCollectionWithGameCards(userId, 25), HttpStatus.OK);
+	}
 }

@@ -48,6 +48,10 @@ public class CardController {
 		return new ResponseEntity<>(cardService.getCardWithImage(cardId), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/getGameCard/{cardId}")
+	public ResponseEntity<Object> getGameCard(@PathVariable String cardId) throws IOException{
+		return new ResponseEntity<>(cardService.getGameCard(cardId), HttpStatus.OK);
+	}
 
 	@GetMapping
 	public List<Card> getAll() {

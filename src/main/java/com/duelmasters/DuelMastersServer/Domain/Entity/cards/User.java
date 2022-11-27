@@ -23,7 +23,10 @@ public class User {
 	private Integer level;
 	private Integer xp;
 
+	//key - cardId, value - total number of that specific card in user collection
 	private HashMap<String, Integer> collection;
+	
+	//list of cardIds
 	private List<String> deck;
 
 	public User(String username, String email, String nickname, byte[] image, Integer money, Integer level, Integer xp,

@@ -1,15 +1,19 @@
 package com.duelmasters.DuelMastersServer.Service.Implementation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.duelmasters.DuelMastersServer.Domain.DTO.CardInCollectionDTO;
+import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
+import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Pack;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
@@ -27,6 +31,7 @@ public class UserServiceImplementation implements UserService {
 	private UserRepository userRepository;
 	private PackService packService;
 	private CardRepository cardRepository;
+	private MapperDTO mapper;
 
 	@Override
 	public User createUser(User user) {
@@ -63,6 +68,7 @@ public class UserServiceImplementation implements UserService {
 		return null;
 	}
 
+	//@Override
 	private User addCardsToCollection(User user, List<String> cardsIds) {
 		HashMap<String, Integer> currentCollection = user.getCollection();
 		if (currentCollection != null) {
@@ -84,10 +90,12 @@ public class UserServiceImplementation implements UserService {
 		return user;
 	}
 	
+	@Override
 	public HashMap<String, Integer> getUserCollection(String id) {
 		return userRepository.findById(id).get().getCollection();
 	}
 	
+	@Override
 	public HashMap<String, Integer> getUserCollectionWithNames(String id) {
 		HashMap<String, Integer> collectionWithNames = new HashMap<>();
 		for(Map.Entry<String, Integer> card : userRepository.findById(id).get().getCollection().entrySet()) {
@@ -96,6 +104,7 @@ public class UserServiceImplementation implements UserService {
 		return collectionWithNames;
 	}
 	
+	@Override
 	public List<CardInCollectionDTO> getUserCollectionCards(String id) {
 		List<CardInCollectionDTO> collectionWithNames = new ArrayList<>();
 		User user = userRepository.findById(id).get();
@@ -104,6 +113,68 @@ public class UserServiceImplementation implements UserService {
 			collectionWithNames.add(new CardInCollectionDTO(cardInCollection.getName(), cardInCollection.getImageId(), card.getValue()));
 		}
 		return collectionWithNames;
+	}
+	
+	@Override
+	public List<String> generateRandomDeckFromCollection(String userId, int numberOfCardsInDeck) {
+		
+		List<String> deck = new ArrayList<>();
+		HashMap<String, Integer> userCollection = userRepository.findById(userId).get().getCollection();
+		
+		Random random = new Random();
+		
+		List<String> cardIds = new ArrayList<String>(userCollection.keySet());
+		while(deck.size() < numberOfCardsInDeck) {
+			String randomCardId = cardIds.get(random.nextInt(cardIds.size()));
+			deck.add(randomCardId);
+			int randomCardDuplicates = userCollection.get(randomCardId);
+			if(randomCardDuplicates - 1 != 0) {
+				userCollection.replace(randomCardId, randomCardDuplicates - 1);
+			}
+			else {
+				userCollection.remove(randomCardId);
+			}
+		}
+		
+		return deck;
+	}
+	
+	@Override
+	public List<GameCard> generateRandomDeckFromCollectionWithGameCards(String userId, int numberOfCardsInDeck) throws IOException {
+		
+		List<GameCard> deck = new ArrayList<>();
+		HashMap<String, Integer> userCollection = userRepository.findById(userId).get().getCollection();
+		
+		Random random = new Random();
+		
+		List<String> cardIds = new ArrayList<String>(userCollection.keySet());
+		List<String> usedCardIds = new ArrayList<>();
+		
+		while(deck.size() < numberOfCardsInDeck) {
+			String randomCardId = cardIds.get(random.nextInt(cardIds.size()));
+			
+			//if a card with this id was already brought from db
+			//don't bring it again, use the object already saved in deck
+			if(usedCardIds.contains(randomCardId)) {
+				deck.add(deck.get(usedCardIds.indexOf(randomCardId)));
+			}
+			else {
+				Card gameCard = cardRepository.findById(randomCardId).get();
+				deck.add(mapper.cardToGameCard(gameCard));
+				usedCardIds.add(randomCardId);
+			}
+			
+			int randomCardDuplicates = userCollection.get(randomCardId);
+			if(randomCardDuplicates - 1 != 0) {
+				userCollection.replace(randomCardId, randomCardDuplicates - 1);
+			}
+			else {
+				userCollection.remove(randomCardId);
+			}
+		}
+		
+		return deck;
+		
 	}
 
 }

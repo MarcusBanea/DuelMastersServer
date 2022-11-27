@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.duelmasters.DuelMastersServer.Domain.DTO.CardWithImageDTO;
+import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
@@ -33,6 +34,10 @@ public class CardServiceImplementation implements CardService {
 		CardWithImageDTO cardDTO = mapper.cardToCardWithImageDTO(card);
 		cardDTO.setImageBytes(fileService.downloadFile(card.getImageId()).getContent());
 		return cardDTO;
+	}
+	
+	public GameCard getGameCard(String id) throws IOException {
+		return mapper.cardToGameCard(cardRepository.findById(id).get());
 	}
 
 	@Override
@@ -76,25 +81,21 @@ public class CardServiceImplementation implements CardService {
 		return cardRepository.getRandomCardWithExactRarity("Common");
 	}
 
-	
 	@Override
 	public Card getRandomUncommonCard() {
 		return cardRepository.getRandomCardWithExactRarity("Uncommon");
 	}
 
-	
 	@Override
 	public Card getRandomRareCard() {
 		return cardRepository.getRandomCardWithExactRarity("Rare");
 	}
 
-	
 	@Override
 	public Card getRandomVeryRareCard() {
 		return cardRepository.getRandomCardWithExactRarity("VeryRare");
 	}
 
-	
 	@Override
 	public Card getRandomSuperRareCard() {
 		return cardRepository.getRandomCardWithExactRarity("SuperRare");
