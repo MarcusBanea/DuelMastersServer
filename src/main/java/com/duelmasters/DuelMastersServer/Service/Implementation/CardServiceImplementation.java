@@ -142,6 +142,10 @@ public class CardServiceImplementation implements CardService {
 		return card;
 	}
 	
+	public Card getRandomCard() {
+		return cardRepository.getRandomCard();
+	}
+	
 	public void deleteCard(String id) {
 		cardRepository.deleteById(id);
 	}

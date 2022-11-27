@@ -100,6 +100,12 @@ public class CardController {
 		return new ResponseEntity<>(cards, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/random")
+	public ResponseEntity<Object> getRandomCard() {
+		CardDTO card = mapper.cardToCardDTO(cardService.getRandomCard());
+		return new ResponseEntity<>(card, HttpStatus.OK);
+	}
+	
 	@DeleteMapping(value = "/delete/{id}")
 	public void deleteCardById(@PathVariable String id) throws IOException {
 		fileService.deleteFile(cardService.getCard(id).getImageId());

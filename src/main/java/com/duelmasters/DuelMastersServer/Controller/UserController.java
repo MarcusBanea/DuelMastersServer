@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.duelmasters.DuelMastersServer.Domain.DTO.CardInCollectionDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.UserCollectionDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.UserDTO;
@@ -51,6 +52,18 @@ public class UserController {
 	@GetMapping(value = "/getCollection/{userId}")
 	public ResponseEntity<Object> getUserCollection(@PathVariable String userId) {
 		HashMap<String, Integer> collection = userService.getUserCollection(userId);
+		return new ResponseEntity<>(collection, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getCollectionWithNames/{userId}")
+	public ResponseEntity<Object> getUserCollectionWithNames(@PathVariable String userId) {
+		HashMap<String, Integer> collection = userService.getUserCollectionWithNames(userId);
+		return new ResponseEntity<>(collection, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getCollectionV2/{userId}")
+	public ResponseEntity<Object> getUserCollectionCards(@PathVariable String userId) {
+		List<CardInCollectionDTO> collection = userService.getUserCollectionCards(userId);
 		return new ResponseEntity<>(collection, HttpStatus.OK);
 	}
 	

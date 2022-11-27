@@ -52,6 +52,9 @@ public interface CardRepository extends MongoRepository<Card, String> {
 	@Aggregation(pipeline = { "{'$match' : {'rarity' : :#{#rarity}}}", "{'$sample' : {size: 1}}" })
 	Card getRandomCardWithExactRarity(@Param("rarity") String rarity);
 	
+	@Aggregation(pipeline = { "{'$sample' : {size: 1}}" })
+	Card getRandomCard();
+	
 	void deleteById(String id);
 	
 	

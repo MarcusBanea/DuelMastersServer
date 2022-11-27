@@ -3,14 +3,17 @@ package com.duelmasters.DuelMastersServer.Service.Implementation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.duelmasters.DuelMastersServer.Domain.DTO.CardInCollectionDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Pack;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
+import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Repository.UserRepository;
 import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
 import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
@@ -23,6 +26,7 @@ public class UserServiceImplementation implements UserService {
 
 	private UserRepository userRepository;
 	private PackService packService;
+	private CardRepository cardRepository;
 
 	@Override
 	public User createUser(User user) {
@@ -82,6 +86,24 @@ public class UserServiceImplementation implements UserService {
 	
 	public HashMap<String, Integer> getUserCollection(String id) {
 		return userRepository.findById(id).get().getCollection();
+	}
+	
+	public HashMap<String, Integer> getUserCollectionWithNames(String id) {
+		HashMap<String, Integer> collectionWithNames = new HashMap<>();
+		for(Map.Entry<String, Integer> card : userRepository.findById(id).get().getCollection().entrySet()) {
+			collectionWithNames.put(cardRepository.findById(card.getKey()).get().getName(), card.getValue());
+		}
+		return collectionWithNames;
+	}
+	
+	public List<CardInCollectionDTO> getUserCollectionCards(String id) {
+		List<CardInCollectionDTO> collectionWithNames = new ArrayList<>();
+		User user = userRepository.findById(id).get();
+		for(Map.Entry<String, Integer> card : user.getCollection().entrySet()) {
+			Card cardInCollection = cardRepository.findById(card.getKey()).get();
+			collectionWithNames.add(new CardInCollectionDTO(cardInCollection.getName(), cardInCollection.getImageId(), card.getValue()));
+		}
+		return collectionWithNames;
 	}
 
 }

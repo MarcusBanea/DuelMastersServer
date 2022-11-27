@@ -40,6 +40,8 @@ public interface CardService {
     
     public Card getRandomLegendaryCard();
     
+    public Card getRandomCard();
+    
     public Card updateCard(String cardId, Card newCard);
     
     public void deleteCard(String id);
