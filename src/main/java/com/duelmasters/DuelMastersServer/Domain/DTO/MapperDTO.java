@@ -1,11 +1,15 @@
 package com.duelmasters.DuelMastersServer.Domain.DTO;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.duelmasters.DuelMastersServer.Domain.Player;
+import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
 import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
@@ -37,6 +41,30 @@ public class MapperDTO {
 		return cardDTO;
 	}
 	
+	public GameCardDTO gameCardToGameCardDTO(GameCard gameCard) throws IOException {
+		ModelMapper modelMapper = new ModelMapper();
+		GameCardDTO cardDTO = modelMapper.map(gameCard, GameCardDTO.class);
+		
+		return cardDTO;
+	}
+	
+	public List<GameCardDTO> listOfGameCardToListOfGameCardDTO(List<GameCard> gameCards) throws IOException {
+		List<GameCardDTO> cardDTO = new ArrayList<>();
+		for(int i = 0; i < gameCards.size(); i++) {
+			GameCard card = gameCards.get(i);
+			GameCardDTO newCard = gameCardToGameCardDTO(card);
+			cardDTO.add(newCard);
+			
+		}
+		return cardDTO;
+	}
+	
+	
+	public PlayerDTO playerToPlayerDTO(Player player) {
+		ModelMapper modelMapper = new ModelMapper();
+		PlayerDTO playerDTO = modelMapper.map(player, PlayerDTO.class);
+		return playerDTO;
+	}
 
 	public UserDTO userToUserDTO(User user) {
 		ModelMapper modelMapper = new ModelMapper();

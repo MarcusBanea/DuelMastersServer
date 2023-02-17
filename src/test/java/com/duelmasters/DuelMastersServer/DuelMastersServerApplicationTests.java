@@ -1,11 +1,12 @@
 package com.duelmasters.DuelMastersServer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
-import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
 import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
@@ -203,6 +204,15 @@ class DuelMastersServerApplicationTests {
 		for(Card card : cards) {
 			System.out.println(card);
 		}
+		*/
+	}
+	
+	@Test
+	public void testRemoveUserCardCollection() {
+		/*
+		String userId = "633f18459af2fa78268b91d4";
+		userService.resetUserCollection(userId);
+		assertEquals(null, userService.getUserCollection(userId));
 		*/
 	}
 

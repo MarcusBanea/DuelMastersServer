@@ -16,6 +16,8 @@ public interface UserService {
 	
 	public List<String> openPack(String userId, String packType);
 	
+	public void resetUserCollection(String userId);
+	
 	public HashMap<String, Integer> getUserCollection(String id);
 	
 	public HashMap<String, Integer> getUserCollectionWithNames(String id);

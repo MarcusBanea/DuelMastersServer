@@ -73,8 +73,15 @@ public class UserController {
 		return new ResponseEntity<>(userService.generateRandomDeckFromCollection(userId, 25), HttpStatus.OK);
 	}
 	
+	//old
 	@GetMapping(value = "/getRandomDeckWithGameCards/{userId}")
 	public ResponseEntity<Object> getUserRandomDeckWithGameCards(@PathVariable String userId) throws IOException {
+		return new ResponseEntity<>(userService.generateRandomDeckFromCollectionWithGameCards(userId, 5), HttpStatus.OK);
+	}
+	
+	//new
+	@GetMapping(value = "/getMatchDeck/{userId}")
+	public ResponseEntity<Object> getMatchDeck(@PathVariable String userId) throws IOException {
 		return new ResponseEntity<>(userService.generateRandomDeckFromCollectionWithGameCards(userId, 25), HttpStatus.OK);
 	}
 }

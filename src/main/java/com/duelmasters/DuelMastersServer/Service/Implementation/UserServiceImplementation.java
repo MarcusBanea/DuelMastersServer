@@ -91,6 +91,13 @@ public class UserServiceImplementation implements UserService {
 	}
 	
 	@Override
+	public void resetUserCollection(String id) {
+		User user = userRepository.findById(id).get();
+		user.setCollection(null);
+		userRepository.save(user);
+	}
+	
+	@Override
 	public HashMap<String, Integer> getUserCollection(String id) {
 		return userRepository.findById(id).get().getCollection();
 	}
@@ -170,6 +177,7 @@ public class UserServiceImplementation implements UserService {
 			}
 			else {
 				userCollection.remove(randomCardId);
+				cardIds.remove(randomCardId);
 			}
 		}
 		
