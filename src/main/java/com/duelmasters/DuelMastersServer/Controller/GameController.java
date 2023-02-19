@@ -3,6 +3,7 @@ package com.duelmasters.DuelMastersServer.Controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,19 +42,49 @@ public class GameController {
 		List<GameCard> player1DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId1, 25);
 		List<GameCard> player2DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId2, 25);
 		
+		Collections.sort(player1DeckCards, (c1, c2) -> c1.getMana() - c2.getMana());
+		Collections.sort(player2DeckCards, (c1, c2) -> c1.getMana() - c2.getMana());
+		
 		List<GameCard> player1HandCards = new ArrayList<>();
 		List<GameCard> player1Shields = new ArrayList<>();
 		
 		List<GameCard> player2HandCards = new ArrayList<>();
 		List<GameCard> player2Shields = new ArrayList<>();
 		
+		
+		/*
 		for(int i = 0; i < 5; i++) {
 			player1HandCards.add(player1DeckCards.get(i));
 			player1Shields.add(player1DeckCards.get(i + 5));
 			player2HandCards.add(player2DeckCards.get(i));
 			player2Shields.add(player2DeckCards.get(i + 5));
 		}
-
+		*/
+		
+		//for testing
+		List<GameCard> player1ManaCards = new ArrayList<>();
+		List<GameCard> player1BattleZoneCards = new ArrayList<>();
+		List<GameCard> player2ManaCards = new ArrayList<>();
+		List<GameCard> player2BattleZoneCards = new ArrayList<>();
+		
+		player1BattleZoneCards.add(player1DeckCards.get(0));
+		player1HandCards.add(player1DeckCards.get(1));
+		player1HandCards.add(player1DeckCards.get(2));
+		player1ManaCards.add(player1DeckCards.get(3));
+		player1ManaCards.add(player1DeckCards.get(4));
+		
+		player2HandCards.add(player2DeckCards.get(0));
+		player2HandCards.add(player2DeckCards.get(1));
+		player2BattleZoneCards.add(player2DeckCards.get(2));
+		player2ManaCards.add(player2DeckCards.get(3));
+		player2ManaCards.add(player2DeckCards.get(4));
+		
+		for(int i = 5; i < 9; i++) {
+			player1Shields.add(player1DeckCards.get(i + 5));
+			player2Shields.add(player2DeckCards.get(i + 5));
+		}
+		
+		
 		for(int i = 0 ; i < 10; i++) {
 			player1DeckCards.remove(0);
 			player2DeckCards.remove(0);
@@ -66,15 +96,19 @@ public class GameController {
 		player1.setDeck((ArrayList) player1DeckCards);
 		player1.setHand((ArrayList) player1HandCards);
 		player1.setShields((ArrayList) player1Shields);
-		player1.setBattleZone(new ArrayList<>());
-		player1.setManaZone(new ArrayList<>());
+		//player1.setBattleZone(new ArrayList<>());
+		//player1.setManaZone(new ArrayList<>());
+		player1.setBattleZone((ArrayList) player1BattleZoneCards);
+		player1.setManaZone((ArrayList) player1ManaCards);
 		player1.setGraveyard(new ArrayList<>());
 		
-		player2.setDeck((ArrayList) player1DeckCards);
-		player2.setHand((ArrayList) player1HandCards);
-		player2.setShields((ArrayList) player1Shields);
-		player2.setBattleZone(new ArrayList<>());
-		player2.setManaZone(new ArrayList<>());
+		player2.setDeck((ArrayList) player2DeckCards);
+		player2.setHand((ArrayList) player2HandCards);
+		player2.setShields((ArrayList) player2Shields);
+		//player2.setBattleZone(new ArrayList<>());
+		//player2.setManaZone(new ArrayList<>());
+		player2.setBattleZone((ArrayList) player2BattleZoneCards);
+		player2.setManaZone((ArrayList) player2ManaCards);
 		player2.setGraveyard(new ArrayList<>());
 		
 		gameEngine.setPlayer1(mapper.playerToPlayerDTO(player1));
@@ -85,16 +119,113 @@ public class GameController {
 	
 	
 	@GetMapping(value = "/action/{action}/{player}")
-	public void executeAction(@PathVariable String action, @PathVariable String player) {
-		switch(action) {
-			case "Draw card" : {
+	public ResponseEntity<Object> executeAction(@PathVariable String action, @PathVariable String player) {
+		ArrayList<String> response = new ArrayList<>();
+		//response[0] - response to player1
+		//response[1] - response to player2
+		
+		String actionBegin = action.substring(0, action.indexOf(' '));
+		switch(actionBegin) {
+			case "DrawCard" : {
 				gameEngine.drawCard(player);
 				break;
 			}
+			//action parameter will represent the indexes, in their specific battle zone, 
+			//of the attacking card, and the attacked card
+			case "Attack" : {
+				action = action.substring(7);
+				//indexes[0] - index of attacking card
+				//indexes[1] - index of attacked card
+				String[] indexes = action.split("\\s+");
+				
+				//compare cards power level
+				switch(player) {
+					//player1 is attacking
+					case "player1" : {
+						int powerLvlAttackingCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])).getPower();
+						int powerLvlAttackedCard = gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])).getPower();
+						if(powerLvlAttackingCard > powerLvlAttackedCard) {
+							//response to player1 - nothing, his card won the battle
+							response.add("");
+							//response to player2 - his card lost the battle, so it will be moved to graveyard
+							response.add("MTG");
+							
+							//save move on the server
+							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
+							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[1]));
+						}
+						//slayer ?
+						else if (powerLvlAttackingCard < powerLvlAttackedCard) {
+							//response to player1 - his card lost the battle, so it will be moved to graveyard
+							response.add("MTG");
+							//response to player2 - nothing, his card won the battle
+							response.add("");
+							
+							//save move on the server
+							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
+							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
+						}
+						else {
+							//cards have equal power levels, so both will be destroyed
+							response.add("MTG");
+							response.add("MTG");
+							
+							//save move on the server
+							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
+							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[1]));
+							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
+							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
+						}
+						break;
+					}
+					//player2 is attacking
+					case "player2" : {
+						int powerLvlAttackingCard = gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])).getPower();
+						int powerLvlAttackedCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])).getPower();
+						if(powerLvlAttackingCard > powerLvlAttackedCard) {
+							//response to player1 - nothing, his card won the battle
+							response.add("MTG");
+							//response to player2 - his card lost the battle, so it will be moved to graveyard
+							response.add("");
+							
+							//save move on the server
+							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
+							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
+						}
+						//slayer ?
+						else if (powerLvlAttackingCard < powerLvlAttackedCard) {
+							//response to player1 - his card lost the battle, so it will be moved to graveyard
+							response.add("");
+							//response to player2 - nothing, his card won the battle
+							response.add("MTG");
+							
+							//save move on the server
+							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
+							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
+						}
+						else {
+							//cards have equal power levels, so both will be destroyed
+							response.add("MTG");
+							response.add("MTG");
+							
+							//save move on the server
+							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
+							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
+							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
+							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
+						}
+						break;
+					}
+				}
+				
+			}
+			
 			default : {
 				break;
 			}
 		}
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/test")

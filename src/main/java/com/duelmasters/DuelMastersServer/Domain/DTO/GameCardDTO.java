@@ -23,6 +23,10 @@ public class GameCardDTO {
 
 	private String ability;
 	
+	//game attributes
+	
+	private boolean tapped;
+	
 	public GameCardDTO() {
 		super();
 	}
