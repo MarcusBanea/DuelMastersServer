@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.duelmasters.DuelMastersServer.Domain.Player;
+import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Service.GameEngine;
@@ -79,7 +80,7 @@ public class GameController {
 		player2ManaCards.add(player2DeckCards.get(3));
 		player2ManaCards.add(player2DeckCards.get(4));
 		
-		for(int i = 5; i < 9; i++) {
+		for(int i = 5; i <= 9; i++) {
 			player1Shields.add(player1DeckCards.get(i + 5));
 			player2Shields.add(player2DeckCards.get(i + 5));
 		}
@@ -124,7 +125,15 @@ public class GameController {
 		//response[0] - response to player1
 		//response[1] - response to player2
 		
-		String actionBegin = action.substring(0, action.indexOf(' '));
+		PlayerDTO currentPlayer = player.equals("player1") ? gameEngine.getPlayer1() : gameEngine.getPlayer2();
+		
+		String actionBegin = "";
+		if(action.indexOf(' ') != -1) {
+			actionBegin = action.substring(0, action.indexOf(' '));
+		}
+		else {
+			actionBegin = action;
+		}
 		switch(actionBegin) {
 			case "DrawCard" : {
 				gameEngine.drawCard(player);
@@ -216,8 +225,27 @@ public class GameController {
 						}
 						break;
 					}
+					default : {
+						break;
+					}
 				}
-				
+				break;
+			}
+			case "MoveToMana" : {
+				action = action.substring(10);
+				action = action.replaceFirst("\\s", "");
+				int cardIndex = Integer.parseInt(action);
+				currentPlayer.getManaZone().add(currentPlayer.getBattleZone().get(cardIndex));
+				currentPlayer.getBattleZone().remove(cardIndex);
+				break;
+			}
+			case "MoveToBattleZone" : {
+				action = action.substring(16);
+				action = action.replaceFirst("\\s", "");
+				int cardIndex = Integer.parseInt(action);
+				currentPlayer.getBattleZone().add(currentPlayer.getHand().get(cardIndex));
+				currentPlayer.getHand().remove(cardIndex);
+				break;
 			}
 			
 			default : {
