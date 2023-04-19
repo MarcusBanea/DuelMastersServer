@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.duelmasters.DuelMastersServer.Domain.Abilities;
 import com.duelmasters.DuelMastersServer.Domain.Player;
 import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
+import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Service.GameEngine;
 import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
@@ -149,13 +151,24 @@ public class GameController {
 				
 				//compare cards power level
 				switch(player) {
+				
 					//player1 is attacking
 					case "player1" : {
+						
+//						//check for "Whenever this creature attacks" ability
+//						String abilityOfAttackingCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])).getAbility();
+//						if(abilityOfAttackingCard.indexOf("WTCA") != -1) {
+//							abilityOfAttackingCard = abilityOfAttackingCard.substring(abilityOfAttackingCard.indexOf("WTCA"), 6);
+//							abilityOfAttackingCard = Abilities.valueOf(abilityOfAttackingCard).getAbility();
+//						}
+						
+						
+						
 						int powerLvlAttackingCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])).getPower();
 						int powerLvlAttackedCard = gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])).getPower();
 						if(powerLvlAttackingCard > powerLvlAttackedCard) {
 							//response to player1 - nothing, his card won the battle
-							response.add("");
+							response.add("NMV");
 							//response to player2 - his card lost the battle, so it will be moved to graveyard
 							response.add("MTG");
 							
@@ -254,6 +267,26 @@ public class GameController {
 		}
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/getAttackOptions/{player}/{zone}/{index}")
+	public ResponseEntity<Object> selectCardGetAttackOptions(@PathVariable String player, @PathVariable String zone, @PathVariable int index){
+		String abilityText = gameEngine.getPlayer1().getBattleZone().get(index).getAbility();
+		String[] abilityCodes = abilityText.split("\\s+");
+		
+		ArrayList<String> attackPosibilities = new ArrayList<>();
+		
+		//search for attacking restrictions (CNAx code type)
+		for(String code : abilityCodes) {
+			if(code.indexOf("CNA") != -1) {
+				//TODO - check type of CNA and fill attackPosibilites array with strings with pattern: zone_index, indicating the cards that can be attacked
+			}
+			else {
+				//no restriction, return a simple message
+				attackPosibilities.add("ALL");
+			}
+		}
+		return new ResponseEntity<>(attackPosibilities, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/test")

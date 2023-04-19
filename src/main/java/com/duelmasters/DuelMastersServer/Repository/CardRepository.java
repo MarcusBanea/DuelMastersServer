@@ -56,6 +56,4 @@ public interface CardRepository extends MongoRepository<Card, String> {
 	Card getRandomCard();
 	
 	void deleteById(String id);
-	
-	
 }

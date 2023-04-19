@@ -54,11 +54,9 @@ public class MapperDTO {
 			GameCard card = gameCards.get(i);
 			GameCardDTO newCard = gameCardToGameCardDTO(card);
 			cardDTO.add(newCard);
-			
 		}
 		return cardDTO;
 	}
-	
 	
 	public PlayerDTO playerToPlayerDTO(Player player) {
 		ModelMapper modelMapper = new ModelMapper();

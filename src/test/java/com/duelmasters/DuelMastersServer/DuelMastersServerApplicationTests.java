@@ -1,11 +1,16 @@
 package com.duelmasters.DuelMastersServer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.duelmasters.DuelMastersServer.Domain.Abilities;
+import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
@@ -214,6 +219,15 @@ class DuelMastersServerApplicationTests {
 		userService.resetUserCollection(userId);
 		assertEquals(null, userService.getUserCollection(userId));
 		*/
+	}
+	
+	@Test
+	public void testGetAbilityDescriptionOfCard() throws IOException {
+//		GameCardDTO card = mapper.gameCardToGameCardDTO(mapper.cardToGameCard(cardRepository.findByName("Sniper Mosquito").get()));
+//		assertEquals(2000, card.getPower());
+//		
+//		assertEquals("WTCA33", card.getAbility());
+//		assertEquals("Choose0(1, MN0) + SEL:MTH", Abilities.valueOf(card.getAbility()).getAbility());
 	}
 
 }
