@@ -248,8 +248,8 @@ public class GameController {
 				action = action.substring(10);
 				action = action.replaceFirst("\\s", "");
 				int cardIndex = Integer.parseInt(action);
-				currentPlayer.getManaZone().add(currentPlayer.getBattleZone().get(cardIndex));
-				currentPlayer.getBattleZone().remove(cardIndex);
+				currentPlayer.getManaZone().add(currentPlayer.getHand().get(cardIndex));
+				currentPlayer.getHand().remove(cardIndex);
 				break;
 			}
 			case "MoveToBattleZone" : {
@@ -271,7 +271,7 @@ public class GameController {
 	
 	@GetMapping(value = "/getAttackOptions/{player}/{zone}/{index}")
 	public ResponseEntity<Object> selectCardGetAttackOptions(@PathVariable String player, @PathVariable String zone, @PathVariable int index){
-		String abilityText = gameEngine.getPlayer1().getBattleZone().get(index).getAbility();
+		String abilityText = gameEngine.getPlayer(player).getBattleZone().get(index).getAbility();
 		String[] abilityCodes = abilityText.split("\\s+");
 		
 		ArrayList<String> attackPosibilities = new ArrayList<>();

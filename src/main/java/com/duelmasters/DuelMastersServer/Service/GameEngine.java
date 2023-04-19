@@ -18,6 +18,10 @@ public class GameEngine {
 	private PlayerDTO player1;
 
 	private PlayerDTO player2;
+	
+	public PlayerDTO getPlayer(String player) {
+		return player == "player1" ? this.player1 : this.player2;
+	}
 
 	// TODO
 	public void executeAbility(String ability) {
