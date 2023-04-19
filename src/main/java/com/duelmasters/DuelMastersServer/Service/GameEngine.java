@@ -20,7 +20,7 @@ public class GameEngine {
 	private PlayerDTO player2;
 	
 	public PlayerDTO getPlayer(String player) {
-		return player == "player1" ? this.player1 : this.player2;
+		return player.equals("player1") ? this.player1 : this.player2;
 	}
 
 	// TODO
