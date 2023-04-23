@@ -45,6 +45,106 @@ public class GameEngine {
 		}
 		}
 	}
+	
+	public void moveCard(String playerIndicator, String zoneFrom, String zoneTo, int index) {		
+		GameCardDTO card = getCardInZone(playerIndicator, zoneFrom, index);
+		addCardInZone(playerIndicator, zoneTo, card);
+		removeCardInZone(playerIndicator, zoneFrom, index);
+		
+	}
+	
+	public GameCardDTO getCardInZone(String playerIndicator, String zone, int index) {
+		PlayerDTO player = playerIndicator.equals("player1") ? this.player1 : this.player2;
+		
+		GameCardDTO card = null;
+		switch(zone) {
+			case "battleZone" : {
+				card = player.getBattleZone().get(index);
+				break;
+			}
+			case "manaZone" : {
+				card = player.getManaZone().get(index);
+				break;
+			}
+			case "hand" : {
+				card = player.getHand().get(index);
+				break;
+			}
+			case "shields" : {
+				card = player.getShields().get(index);
+				break;
+			}
+			case "graveyard" : {
+				card = player.getGraveyard().get(index);
+				break;
+			}
+			default : {
+				break;
+			}
+		}
+		return card;
+	}
+	
+	public void removeCardInZone(String playerIndicator, String zone, int index) {
+		PlayerDTO player = playerIndicator.equals("player1") ? this.player1 : this.player2;
+		
+		switch(zone) {
+			case "battleZone" : {
+				player.getBattleZone().remove(index);
+				break;
+			}
+			case "manaZone" : {
+				player.getManaZone().remove(index);
+				break;
+			}
+			case "hand" : {
+				player.getHand().remove(index);
+				break;
+			}
+			case "shields" : {
+				player.getShields().remove(index);
+				break;
+			}
+			case "graveyard" : {
+				player.getGraveyard().remove(index);
+				break;
+			}
+			default : {
+				break;
+			}
+		}
+	}
+	
+	public void addCardInZone(String playerIndicator, String zone, GameCardDTO card) {
+		PlayerDTO player = playerIndicator.equals("player1") ? this.player1 : this.player2;
+		
+		switch(zone) {
+			case "battleZone" : {
+				player.getBattleZone().add(card);
+				break;
+			}
+			case "manaZone" : {
+				player.getManaZone().add(card);
+				break;
+			}
+			case "hand" : {
+				player.getHand().add(card);
+				break;
+			}
+			case "shields" : {
+				player.getShields().add(card);
+				break;
+			}
+			case "graveyard" : {
+				player.getGraveyard().add(card);
+				break;
+			}
+			default : {
+				break;
+			}
+		}
+	}
+	
 
 	// utils
 

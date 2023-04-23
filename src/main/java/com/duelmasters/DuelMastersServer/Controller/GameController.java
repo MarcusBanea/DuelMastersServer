@@ -14,11 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.duelmasters.DuelMastersServer.Domain.Abilities;
 import com.duelmasters.DuelMastersServer.Domain.Player;
 import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
-import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Service.GameEngine;
 import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
@@ -173,8 +171,10 @@ public class GameController {
 							response.add("MTG");
 							
 							//save move on the server
-							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
-							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[1]));
+							int cardIndex = Integer.parseInt(indexes[1]);
+							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
+							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
+							//gameEngine.getPlayer2().getBattleZone().remove();
 						}
 						//slayer ?
 						else if (powerLvlAttackingCard < powerLvlAttackedCard) {
@@ -184,8 +184,10 @@ public class GameController {
 							response.add("");
 							
 							//save move on the server
-							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
-							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
+							int cardIndex = Integer.parseInt(indexes[0]);
+							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
+							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
+							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
 						}
 						else {
 							//cards have equal power levels, so both will be destroyed
@@ -193,10 +195,14 @@ public class GameController {
 							response.add("MTG");
 							
 							//save move on the server
-							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
-							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[1]));
-							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
-							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
+							int cardIndex = Integer.parseInt(indexes[0]);
+							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
+							cardIndex = Integer.parseInt(indexes[1]);
+							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
+							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
+							//gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[1]));
+							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
+							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
 						}
 						break;
 					}
@@ -211,8 +217,10 @@ public class GameController {
 							response.add("");
 							
 							//save move on the server
-							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
-							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
+							int cardIndex = Integer.parseInt(indexes[1]);
+							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
+							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
+							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
 						}
 						//slayer ?
 						else if (powerLvlAttackingCard < powerLvlAttackedCard) {
@@ -222,8 +230,10 @@ public class GameController {
 							response.add("MTG");
 							
 							//save move on the server
-							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
-							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
+							int cardIndex = Integer.parseInt(indexes[0]);
+							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
+							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
+							//gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
 						}
 						else {
 							//cards have equal power levels, so both will be destroyed
@@ -231,10 +241,14 @@ public class GameController {
 							response.add("MTG");
 							
 							//save move on the server
-							gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
-							gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
-							gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
-							gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
+							int cardIndex = Integer.parseInt(indexes[1]);
+							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
+							cardIndex = Integer.parseInt(indexes[0]);
+							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
+							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
+							//gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
+							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
+							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
 						}
 						break;
 					}
@@ -248,16 +262,15 @@ public class GameController {
 				action = action.substring(10);
 				action = action.replaceFirst("\\s", "");
 				int cardIndex = Integer.parseInt(action);
-				currentPlayer.getManaZone().add(currentPlayer.getHand().get(cardIndex));
-				currentPlayer.getHand().remove(cardIndex);
+				
+				gameEngine.moveCard(player, "hand", "manaZone", cardIndex);
 				break;
 			}
 			case "MoveToBattleZone" : {
 				action = action.substring(16);
 				action = action.replaceFirst("\\s", "");
 				int cardIndex = Integer.parseInt(action);
-				currentPlayer.getBattleZone().add(currentPlayer.getHand().get(cardIndex));
-				currentPlayer.getHand().remove(cardIndex);
+				gameEngine.moveCard(player, "hand", "battleZone", cardIndex);
 				break;
 			}
 			
