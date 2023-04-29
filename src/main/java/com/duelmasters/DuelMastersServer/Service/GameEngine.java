@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.duelmasters.DuelMastersServer.Domain.Abilities;
+import com.duelmasters.DuelMastersServer.Domain.Ability;
+import com.duelmasters.DuelMastersServer.Domain.ActionCard;
+import com.duelmasters.DuelMastersServer.Domain.Aftermath;
 import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
 
@@ -22,11 +26,7 @@ public class GameEngine {
 	public PlayerDTO getPlayer(String player) {
 		return player.equals("player1") ? this.player1 : this.player2;
 	}
-
-	// TODO
-	public void executeAbility(String ability) {
-
-	}
+	
 
 	// test
 	public void drawCard(String player) {
@@ -144,8 +144,75 @@ public class GameEngine {
 			}
 		}
 	}
-	
+		
+	public Aftermath execute2CardTypeAction(ActionCard actionCard1, ActionCard actionCard2, String actionType) {
+		Aftermath aftermath = new Aftermath();
+		
+		GameCardDTO card1 = getCardInZone(actionCard1.getPlayer(), actionCard1.getZone(), actionCard1.getIndex());
+		GameCardDTO card2 = getCardInZone(actionCard2.getPlayer(), actionCard2.getZone(), actionCard2.getIndex());
 
+		switch(actionType) {
+			case "block" : 
+			case "attack" : {
+				//check for trigger on attacking card
+				//TODO
+				for(Ability ability : card1.getAbility()) {
+					if(ability.getTrigger().equals("attacking")) {
+						//check for "Whenever this creature attacks" ability
+						String abilityEffectEncoded = ability.getEffect();
+						String abilityEffectDecoded = "";
+						if(abilityEffectEncoded.indexOf("WTCA") != -1) {
+							abilityEffectDecoded = abilityEffectEncoded.substring(abilityEffectEncoded.indexOf("WTCA"), 6);
+							abilityEffectDecoded = Abilities.valueOf(abilityEffectDecoded).getAbility();
+						}
+						aftermath.addAbility(abilityEffectDecoded);
+					}
+				}
+				
+				//execute action attack
+				//move cards to appropriate zones and modify their states (power level, speed attacker, ...)
+				//check for triggered abilities after the execution
+				if(card1.getPower() > card2.getPower()) {
+					
+					//card2 will be destroyed
+					moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+					
+					aftermath.setCard1State("");
+					aftermath.setCard2State("destroyed");
+					
+					//check for trigger on destroyed card
+					//TODO
+				}
+				else if(card1.getPower() < card2.getPower()) {
+					
+					aftermath.setCard1State("destroyed");
+					aftermath.setCard2State("");
+					
+					//card1 will be destroyed
+					moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+				}
+				else {
+					
+					aftermath.setCard1State("destroyed");
+					aftermath.setCard2State("destroyed");
+					
+					//both cards will be destroyed
+					moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+					moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+				}
+				
+				break;
+			}
+			default : {
+				break;
+			}
+
+		}
+		
+		return aftermath;
+	}
+	
+	
 	// utils
 
 	public int count(int type, String filter, String zone) {

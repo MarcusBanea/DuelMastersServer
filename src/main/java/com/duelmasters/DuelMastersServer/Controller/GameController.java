@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.duelmasters.DuelMastersServer.Domain.ActionCard;
+import com.duelmasters.DuelMastersServer.Domain.Aftermath;
 import com.duelmasters.DuelMastersServer.Domain.Player;
 import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
@@ -118,6 +120,19 @@ public class GameController {
 		return new ResponseEntity<>(Arrays.asList(player1, player2), HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/2cardAction/{indexCard1}/{zoneCard1}/{playerCard1}/{indexCard2}/{zoneCard2}/{playerCard2}/{action}")
+	public ResponseEntity<Object> execute2CardAction(@PathVariable Integer indexCard1,
+			@PathVariable String zoneCard1, @PathVariable String playerCard1, @PathVariable Integer indexCard2,
+			@PathVariable String zoneCard2, @PathVariable String playerCard2, @PathVariable String action) {
+		
+		ActionCard actionCard1 = new ActionCard(indexCard1, zoneCard1, playerCard1);
+		ActionCard actionCard2 = new ActionCard(indexCard2, zoneCard2, playerCard2);
+		
+		Aftermath aftermath = gameEngine.execute2CardTypeAction(actionCard1, actionCard2, action);
+		
+		return new ResponseEntity<>(aftermath, HttpStatus.OK);
+	}
+	
 	
 	@GetMapping(value = "/action/{action}/{player}")
 	public ResponseEntity<Object> executeAction(@PathVariable String action, @PathVariable String player) {
@@ -141,128 +156,16 @@ public class GameController {
 			}
 			//action parameter will represent the indexes, in their specific battle zone, 
 			//of the attacking card, and the attacked card
-			case "Attack" : {
-				action = action.substring(7);
-				//indexes[0] - index of attacking card
-				//indexes[1] - index of attacked card
-				String[] indexes = action.split("\\s+");
-				
-				//compare cards power level
-				switch(player) {
-				
-					//player1 is attacking
-					case "player1" : {
-						
-//						//check for "Whenever this creature attacks" ability
-//						String abilityOfAttackingCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])).getAbility();
-//						if(abilityOfAttackingCard.indexOf("WTCA") != -1) {
-//							abilityOfAttackingCard = abilityOfAttackingCard.substring(abilityOfAttackingCard.indexOf("WTCA"), 6);
-//							abilityOfAttackingCard = Abilities.valueOf(abilityOfAttackingCard).getAbility();
-//						}
-						
-						
-						
-						int powerLvlAttackingCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])).getPower();
-						int powerLvlAttackedCard = gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])).getPower();
-						if(powerLvlAttackingCard > powerLvlAttackedCard) {
-							//response to player1 - nothing, his card won the battle
-							response.add("NMV");
-							//response to player2 - his card lost the battle, so it will be moved to graveyard
-							response.add("MTG");
-							
-							//save move on the server
-							int cardIndex = Integer.parseInt(indexes[1]);
-							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
-							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
-							//gameEngine.getPlayer2().getBattleZone().remove();
-						}
-						//slayer ?
-						else if (powerLvlAttackingCard < powerLvlAttackedCard) {
-							//response to player1 - his card lost the battle, so it will be moved to graveyard
-							response.add("MTG");
-							//response to player2 - nothing, his card won the battle
-							response.add("");
-							
-							//save move on the server
-							int cardIndex = Integer.parseInt(indexes[0]);
-							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
-							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
-							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
-						}
-						else {
-							//cards have equal power levels, so both will be destroyed
-							response.add("MTG");
-							response.add("MTG");
-							
-							//save move on the server
-							int cardIndex = Integer.parseInt(indexes[0]);
-							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
-							cardIndex = Integer.parseInt(indexes[1]);
-							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
-							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[1])));
-							//gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[1]));
-							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[0])));
-							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[0]));
-						}
-						break;
-					}
-					//player2 is attacking
-					case "player2" : {
-						int powerLvlAttackingCard = gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])).getPower();
-						int powerLvlAttackedCard = gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])).getPower();
-						if(powerLvlAttackingCard > powerLvlAttackedCard) {
-							//response to player1 - nothing, his card won the battle
-							response.add("MTG");
-							//response to player2 - his card lost the battle, so it will be moved to graveyard
-							response.add("");
-							
-							//save move on the server
-							int cardIndex = Integer.parseInt(indexes[1]);
-							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
-							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
-							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
-						}
-						//slayer ?
-						else if (powerLvlAttackingCard < powerLvlAttackedCard) {
-							//response to player1 - his card lost the battle, so it will be moved to graveyard
-							response.add("");
-							//response to player2 - nothing, his card won the battle
-							response.add("MTG");
-							
-							//save move on the server
-							int cardIndex = Integer.parseInt(indexes[0]);
-							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
-							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
-							//gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
-						}
-						else {
-							//cards have equal power levels, so both will be destroyed
-							response.add("MTG");
-							response.add("MTG");
-							
-							//save move on the server
-							int cardIndex = Integer.parseInt(indexes[1]);
-							gameEngine.moveCard("player1", "battleZone", "graveyard", cardIndex);
-							cardIndex = Integer.parseInt(indexes[0]);
-							gameEngine.moveCard("player2", "battleZone", "graveyard", cardIndex);
-							//gameEngine.getPlayer2().getGraveyard().add(gameEngine.getPlayer2().getBattleZone().get(Integer.parseInt(indexes[0])));
-							//gameEngine.getPlayer2().getBattleZone().remove(Integer.parseInt(indexes[0]));
-							//gameEngine.getPlayer1().getGraveyard().add(gameEngine.getPlayer1().getBattleZone().get(Integer.parseInt(indexes[1])));
-							//gameEngine.getPlayer1().getBattleZone().remove(Integer.parseInt(indexes[1]));
-						}
-						break;
-					}
-					default : {
-						break;
-					}
-				}
+			case "Attack": {
+				//TODO
+				gameEngine.execute2CardTypeAction(new ActionCard(null, actionBegin, player), null, "attack");
+								
 				break;
 			}
 			case "MoveToMana" : {
 				action = action.substring(10);
 				action = action.replaceFirst("\\s", "");
 				int cardIndex = Integer.parseInt(action);
-				
 				gameEngine.moveCard(player, "hand", "manaZone", cardIndex);
 				break;
 			}
@@ -282,25 +185,45 @@ public class GameController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/act")
+	public ResponseEntity<Object> executeAction(@PathVariable String player, @PathVariable String actionType,
+			@PathVariable String[] zones, @PathVariable String[] indexes) {
+
+		ArrayList<String> response = new ArrayList<>();
+		
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/getAttackOptions/{player}/{zone}/{index}")
 	public ResponseEntity<Object> selectCardGetAttackOptions(@PathVariable String player, @PathVariable String zone, @PathVariable int index){
-		String abilityText = gameEngine.getPlayer(player).getBattleZone().get(index).getAbility();
-		String[] abilityCodes = abilityText.split("\\s+");
+		//String abilityText = gameEngine.getPlayer(player).getBattleZone().get(index).getAbility();
+		//String[] abilityCodes = abilityText.split("\\s+");
 		
 		ArrayList<String> attackPosibilities = new ArrayList<>();
 		
 		//search for attacking restrictions (CNAx code type)
-		for(String code : abilityCodes) {
-			if(code.indexOf("CNA") != -1) {
-				//TODO - check type of CNA and fill attackPosibilites array with strings with pattern: zone_index, indicating the cards that can be attacked
-			}
-			else {
-				//no restriction, return a simple message
-				attackPosibilities.add("ALL");
-			}
-		}
+//		for(String code : abilityCodes) {
+//			if(code.indexOf("CNA") != -1) {
+//				//TODO - check type of CNA and fill attackPosibilites array with strings with pattern: zone_index, indicating the cards that can be attacked
+//			}
+//			else {
+//				//no restriction, return a simple message
+//				attackPosibilities.add("ALL");
+//			}
+//		}
+		attackPosibilities.add("ALL");
 		return new ResponseEntity<>(attackPosibilities, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/moveCard/{player}/{zoneFrom}/{zoneTo}/{index}")
+	public ResponseEntity<Object> moveCard(@PathVariable String player, @PathVariable String zoneFrom, @PathVariable String zoneTo,
+			@PathVariable int index){
+		
+		gameEngine.moveCard(player, zoneFrom, zoneTo, index);
+		return new ResponseEntity<>(null, HttpStatus.OK);
+	}
+	
 	
 	@GetMapping(value = "/test")
 	public ResponseEntity<Object> test() {

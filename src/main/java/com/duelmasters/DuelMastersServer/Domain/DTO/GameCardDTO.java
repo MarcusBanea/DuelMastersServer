@@ -1,5 +1,7 @@
 package com.duelmasters.DuelMastersServer.Domain.DTO;
 
+import com.duelmasters.DuelMastersServer.Domain.Ability;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -21,7 +23,7 @@ public class GameCardDTO {
 
 	private String type;
 
-	private String ability;
+	private Ability[] ability;
 	
 	//game attributes
 	

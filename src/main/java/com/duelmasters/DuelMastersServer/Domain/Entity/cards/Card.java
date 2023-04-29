@@ -5,6 +5,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.duelmasters.DuelMastersServer.Domain.Abilities;
+import com.duelmasters.DuelMastersServer.Domain.Ability;
+
 import lombok.Data;
 
 @Data
@@ -30,7 +33,7 @@ public class Card {
 	@Field("type")
 	private String type;
 
-	private String ability;
+	private Ability[] ability;
 
 	@Field("rarity")
 	private String rarity;
@@ -38,7 +41,7 @@ public class Card {
 	private String imageId;
 
 	public Card(String name, String cardRealm, String cardClass, Integer mana, Integer power, Integer breakerNumber,
-			String type, String ability, String rarity, String imageId) {
+			String type, Ability[] ability, String rarity, String imageId) {
 		super();
 		this.name = name;
 		this.cardRealm = cardRealm;
