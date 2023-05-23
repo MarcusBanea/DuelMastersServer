@@ -3,10 +3,6 @@ package com.duelmasters.DuelMastersServer.Domain.Entity.cards;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import com.duelmasters.DuelMastersServer.Domain.Abilities;
-import com.duelmasters.DuelMastersServer.Domain.Ability;
 
 import lombok.Data;
 
@@ -20,62 +16,52 @@ public class Card {
 	@Indexed(unique = true)
 	private String name;
 
-	private String cardRealm;
+	private String realm;
 
 	private String cardClass;
 
-	private Integer mana;
+	private String mana;
 
-	private Integer power;
+	private String power;
 
-	private Integer breakerNumber;
-
-	@Field("type")
-	private String type;
-
-	private Ability[] ability;
-
-	@Field("rarity")
 	private String rarity;
+	
+	private String[] ability;
+	
+	private String[] attackProperty;
+	
+	private String[] blockProperty;
+	
+	private String[] type;
+	
+	private String[] placement;
+	
+	private String[] endOfTurn;
+	
+	private String[] addedPower;
 
 	private String imageId;
 
-	public Card(String name, String cardRealm, String cardClass, Integer mana, Integer power, Integer breakerNumber,
-			String type, Ability[] ability, String rarity, String imageId) {
+	public Card(String name, String realm, String cardClass, String mana, String power, String rarity, String[] ability,
+			String[] attackProperty, String[] blockProperty, String[] type, String[] placement, String[] endOfTurn,
+			String[] addedPower) {
 		super();
 		this.name = name;
-		this.cardRealm = cardRealm;
+		this.realm = realm;
 		this.cardClass = cardClass;
 		this.mana = mana;
 		this.power = power;
-		this.breakerNumber = breakerNumber;
-		this.type = type;
-		this.ability = ability;
 		this.rarity = rarity;
-		this.imageId = imageId;
+		this.ability = ability;
+		this.attackProperty = attackProperty;
+		this.blockProperty = blockProperty;
+		this.type = type;
+		this.placement = placement;
+		this.endOfTurn = endOfTurn;
+		this.addedPower = addedPower;
 	}
-
-	@Override
-	public String toString() {
-		return "Card [name=" + name + ", rarity=" + rarity + "]\n";
-	}
-
-//	@Override
-//	public String toString() {
-//		return "Card: [name = " + name + "]\n";
-//	}
-
-//	@Override
-//	public String toString() {
-//		return "Card [name = " + name + "\ncardRealm = " + cardRealm + "\ncardClass = " + cardClass + "\nmana = " + mana
-//				+ "\npower = " + power + "\nbreakerNumber = " + breakerNumber + "\ntype = " + type + "\nability = " + ability
-//				+ "\nrarity = " + rarity + "]\n";
-//	}
 	
-	
-	
-	
-	
-	
-
+	public Card() {
+		
+	};
 }

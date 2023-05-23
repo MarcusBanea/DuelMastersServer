@@ -13,10 +13,13 @@ public class Aftermath {
 	
 	private ArrayList<String> triggeredAbilities;
 	
+	private String extras;
+	
 	public Aftermath() {
 		this.card1State = "";
 		this.card2State = "";
 		this.triggeredAbilities = new ArrayList<>();
+		this.extras = "";
 	}
 	
 	public void addAbility(String ability) { 

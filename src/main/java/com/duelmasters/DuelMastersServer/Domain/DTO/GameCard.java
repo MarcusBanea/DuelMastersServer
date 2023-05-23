@@ -1,7 +1,5 @@
 package com.duelmasters.DuelMastersServer.Domain.DTO;
 
-import com.duelmasters.DuelMastersServer.Domain.Ability;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,20 +9,30 @@ public class GameCard {
 
 	private String name;
 
-	private String cardRealm;
+	private String realm;
 
 	private String cardClass;
 
-	private Integer mana;
+	private String mana;
 
-	private Integer power;
+	private String power;
 
-	private Integer breakerNumber;
-
-	private String type;
-
-	private Ability[] ability;
-
+	private String rarity;
+	
+	private String[] ability;
+	
+	private String[] attackProperty;
+	
+	private String[] blockProperty;
+	
+	private String[] type;
+	
+	private String[] placement;
+	
+	private String[] endOfTurn;
+	
+	private String[] addedPower;
+	
 	private byte[] image;
 	
 	public GameCard() {

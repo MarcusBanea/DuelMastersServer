@@ -42,11 +42,12 @@ public class GameController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping(value = "/initialize/{userId1}/{userId2}")
 	public ResponseEntity<Object> initialize(@PathVariable String userId1, @PathVariable String userId2) throws IOException {
+		
 		List<GameCard> player1DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId1, 25);
 		List<GameCard> player2DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId2, 25);
 		
-		Collections.sort(player1DeckCards, (c1, c2) -> c1.getMana() - c2.getMana());
-		Collections.sort(player2DeckCards, (c1, c2) -> c1.getMana() - c2.getMana());
+		Collections.sort(player1DeckCards, (c1, c2) -> Integer.parseInt(c1.getMana()) - Integer.parseInt(c2.getMana()));
+		Collections.sort(player2DeckCards, (c1, c2) -> Integer.parseInt(c1.getMana()) - Integer.parseInt(c2.getMana()));
 		
 		List<GameCard> player1HandCards = new ArrayList<>();
 		List<GameCard> player1Shields = new ArrayList<>();
@@ -73,22 +74,39 @@ public class GameController {
 		player1BattleZoneCards.add(player1DeckCards.get(0));
 		player1HandCards.add(player1DeckCards.get(1));
 		player1HandCards.add(player1DeckCards.get(2));
-		player1ManaCards.add(player1DeckCards.get(3));
-		player1ManaCards.add(player1DeckCards.get(4));
+		player1HandCards.add(player1DeckCards.get(3));
+		player1HandCards.add(player1DeckCards.get(4));
+		player1HandCards.add(player1DeckCards.get(5));
+		player1ManaCards.add(player1DeckCards.get(6));
+		player1ManaCards.add(player1DeckCards.get(7));
+		player1ManaCards.add(player1DeckCards.get(8));
+		player1ManaCards.add(player1DeckCards.get(9));
+		player1ManaCards.add(player1DeckCards.get(10));
 		
 		player2HandCards.add(player2DeckCards.get(0));
 		player2HandCards.add(player2DeckCards.get(1));
-		player2BattleZoneCards.add(player2DeckCards.get(2));
-		player2ManaCards.add(player2DeckCards.get(3));
-		player2ManaCards.add(player2DeckCards.get(4));
+		player2HandCards.add(player2DeckCards.get(2));
+		player2HandCards.add(player2DeckCards.get(3));
+		player2HandCards.add(player2DeckCards.get(4));
+		player2BattleZoneCards.add(player2DeckCards.get(5));
+		player2ManaCards.add(player2DeckCards.get(6));
+		player2ManaCards.add(player2DeckCards.get(7));
+		player2ManaCards.add(player2DeckCards.get(8));
+		player2ManaCards.add(player2DeckCards.get(9));
+		player2ManaCards.add(player2DeckCards.get(10));
 		
-		for(int i = 5; i <= 9; i++) {
-			player1Shields.add(player1DeckCards.get(i + 5));
-			player2Shields.add(player2DeckCards.get(i + 5));
+		for(int i = 11; i <= 15; i++) {
+			player1Shields.add(player1DeckCards.get(player1DeckCards.size() - i));
+			player2Shields.add(player2DeckCards.get(player2DeckCards.size() - i));
+			
+			
+			GameCard temp = player1Shields.get(i - 11);
+			player1Shields.set(i - 11, player1HandCards.get(i - 11));
+			player1HandCards.set(i - 11, temp);
 		}
 		
 		
-		for(int i = 0 ; i < 10; i++) {
+		for(int i = 0 ; i < 13; i++) {
 			player1DeckCards.remove(0);
 			player2DeckCards.remove(0);
 		}		
@@ -191,37 +209,20 @@ public class GameController {
 
 		ArrayList<String> response = new ArrayList<>();
 		
-		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/getAttackOptions/{player}/{zone}/{index}")
-	public ResponseEntity<Object> selectCardGetAttackOptions(@PathVariable String player, @PathVariable String zone, @PathVariable int index){
-		//String abilityText = gameEngine.getPlayer(player).getBattleZone().get(index).getAbility();
-		//String[] abilityCodes = abilityText.split("\\s+");
-		
-		ArrayList<String> attackPosibilities = new ArrayList<>();
-		
-		//search for attacking restrictions (CNAx code type)
-//		for(String code : abilityCodes) {
-//			if(code.indexOf("CNA") != -1) {
-//				//TODO - check type of CNA and fill attackPosibilites array with strings with pattern: zone_index, indicating the cards that can be attacked
-//			}
-//			else {
-//				//no restriction, return a simple message
-//				attackPosibilities.add("ALL");
-//			}
-//		}
-		attackPosibilities.add("ALL");
-		return new ResponseEntity<>(attackPosibilities, HttpStatus.OK);
+	public ResponseEntity<Object> selectCardGetAttackOptions(@PathVariable String player, @PathVariable String zone,
+			@PathVariable int index) {
+		return new ResponseEntity<>(gameEngine.getAttackOptionsForCard(player, zone, index), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/moveCard/{player}/{zoneFrom}/{zoneTo}/{index}")
 	public ResponseEntity<Object> moveCard(@PathVariable String player, @PathVariable String zoneFrom, @PathVariable String zoneTo,
 			@PathVariable int index){
 		
-		gameEngine.moveCard(player, zoneFrom, zoneTo, index);
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		return new ResponseEntity<>(gameEngine.moveCard(player, zoneFrom, zoneTo, index), HttpStatus.OK);
 	}
 	
 	

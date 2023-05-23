@@ -11,6 +11,8 @@ public interface CardService {
 	
 	public Card getCard(String id);
 	
+	public Card getCardByName(String name);
+	
 	public CardWithImageDTO getCardWithImage(String id) throws IOException;
 	
 	public GameCard getGameCard(String id) throws IOException;

@@ -2,6 +2,7 @@ package com.duelmasters.DuelMastersServer.Service.Implementation;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,15 @@ public class CardServiceImplementation implements CardService {
 	@Override
 	public Card getCard(String id) {
 		return cardRepository.findById(id).get();
+	}
+	
+	@Override
+	public Card getCardByName(String name) {
+		Optional<Card> card = cardRepository.findByName(name);
+		if(card.isPresent()) {
+			return card.get();
+		}
+		return null;
 	}
 	
 	@Override
@@ -112,8 +122,8 @@ public class CardServiceImplementation implements CardService {
 		if(newCard.getName() != null) {
 			card.setName(newCard.getName());
 		}
-		if(newCard.getCardRealm() != null) {
-			card.setCardRealm(newCard.getCardRealm());
+		if(newCard.getRealm() != null) {
+			card.setRealm(newCard.getRealm());
 		}
 		if(newCard.getCardClass() != null) {
 			card.setCardClass(newCard.getCardClass());
@@ -123,9 +133,6 @@ public class CardServiceImplementation implements CardService {
 		}
 		if(newCard.getPower() != null) {
 			card.setPower(newCard.getPower());
-		}
-		if(newCard.getBreakerNumber() != null) {
-			card.setBreakerNumber(newCard.getBreakerNumber());
 		}
 		if(newCard.getType() != null) {
 			card.setType(newCard.getType());

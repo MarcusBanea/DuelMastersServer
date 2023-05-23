@@ -1,6 +1,8 @@
 package com.duelmasters.DuelMastersServer.Service.Implementation;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -35,6 +37,17 @@ public class FileServiceImpl implements FileService {
 
 		return fileId.toString();
 	}
+	
+	@Override
+	public String uploadFileFromServer(byte[] fileData, String fileName, long fileSize) throws IOException {
+		DBObject data = new BasicDBObject();
+		data.put("size", fileSize);
+		
+		InputStream stream = new ByteArrayInputStream(fileData);
+		Object fileId = template.store(stream, fileName, "image/jpeg", data);
+
+		return fileId.toString();
+	}
 
 	@Override
 	public LoadFile downloadFile(String id) throws IOException {
@@ -50,6 +63,20 @@ public class FileServiceImpl implements FileService {
 		}
 
 		return file;
+	}
+	
+	@Override
+	public String getFileIdByName(String name) throws IOException {
+		
+		GridFSFile gridFSFile = template.findOne(new Query(Criteria.where("filename").is(name)));
+		LoadFile file = new LoadFile();
+		
+		String id = "";
+		if (gridFSFile != null && gridFSFile.getMetadata() != null) {
+			id = gridFSFile.getObjectId().toString();
+		}
+
+		return id;
 	}
 
 	@Override
