@@ -312,79 +312,89 @@ public class GameEngine {
 					}
 				}
 				
-				//get cards power level (when attacking)
-				int attackingCardPower = 0;
-				int defendingCardPower = 0;
-				if(card1.getPower().indexOf("+") != -1) {
-					attackingCardPower = Integer.parseInt(card1.getPower().substring(0, card1.getPower().length() - 1));
-					//check for "PA" attack property
-					for(String attackProp : card1.getAttackProperty()) {
-						if(attackProp.startsWith("PA")) {
-							attackingCardPower += Integer.parseInt(Abilities.valueOf(attackProp).getAbility());
-						}
-					}
-					attackingCardPower += getAddedPowerForCard(card1, false);
-				}
-				else {
-					attackingCardPower = Integer.parseInt(card1.getPower());
-				}
-				
-				if(card2.getPower().indexOf("+") != -1) {
-					defendingCardPower = Integer.parseInt(card2.getPower().substring(0, card2.getPower().length() - 1));
-					defendingCardPower += getAddedPowerForCard(card2, true);
-				}
-				else {
-					defendingCardPower = Integer.parseInt(card2.getPower());
-				}
-				
-				//execute action attack
-				//move cards to appropriate zones and modify their states (power level, speed attacker, ...)
-				//check for triggered abilities after the execution
-				if(attackingCardPower > defendingCardPower) {
-					
-					//card2 will be destroyed
-					moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
-					
+				//if a shield was attacked, then no battle happens
+				//the shield-card will be moved to player's hand
+				//the other card is tapped
+				if(actionCard2.getZone().equals("shields")) {
+					moveCard(actionCard2.getPlayer(), actionCard2.getZone(), "hand", actionCard2.getIndex());
 					aftermath.setCard1State("");
-					aftermath.setCard2State("destroyed");
-					
-				}
-				else if(attackingCardPower < defendingCardPower) {
-					
-					aftermath.setCard1State("destroyed");
-					aftermath.setCard2State("");
-					
-					//card1 will be destroyed
-					moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+					aftermath.setCard2State("MTH");
 				}
 				else {
+					//get cards power level (when attacking)
+					int attackingCardPower = 0;
+					int defendingCardPower = 0;
+					if(card1.getPower().indexOf("+") != -1) {
+						attackingCardPower = Integer.parseInt(card1.getPower().substring(0, card1.getPower().length() - 1));
+						//check for "PA" attack property
+						for(String attackProp : card1.getAttackProperty()) {
+							if(attackProp.startsWith("PA")) {
+								attackingCardPower += Integer.parseInt(Abilities.valueOf(attackProp).getAbility());
+							}
+						}
+						attackingCardPower += getAddedPowerForCard(card1, false);
+					}
+					else {
+						attackingCardPower = Integer.parseInt(card1.getPower());
+					}
 					
-					aftermath.setCard1State("destroyed");
-					aftermath.setCard2State("destroyed");
+					if(card2.getPower().indexOf("+") != -1) {
+						defendingCardPower = Integer.parseInt(card2.getPower().substring(0, card2.getPower().length() - 1));
+						defendingCardPower += getAddedPowerForCard(card2, true);
+					}
+					else {
+						defendingCardPower = Integer.parseInt(card2.getPower());
+					}
 					
-					//both cards will be destroyed
-					moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
-					moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
-				}
-				
-				//check for trigger on destroyed card
-				if(aftermath.getCard1State().equals("destroyed")) {
-					for(String attackAbility : card1.getAttackProperty()) {
-						if(attackAbility.indexOf("WTCID") != -1) {
-							aftermath.addAbility(actionCard1.getPlayer() + "#" + Abilities.valueOf(attackAbility).getAbility());
+					//execute action attack
+					//move cards to appropriate zones and modify their states (power level, speed attacker, ...)
+					//check for triggered abilities after the execution
+					if(attackingCardPower > defendingCardPower) {
+						
+						//card2 will be destroyed
+						moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+						
+						aftermath.setCard1State("");
+						aftermath.setCard2State("destroyed");
+						
+					}
+					else if(attackingCardPower < defendingCardPower) {
+						
+						aftermath.setCard1State("destroyed");
+						aftermath.setCard2State("");
+						
+						//card1 will be destroyed
+						moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+					}
+					else {
+						
+						aftermath.setCard1State("destroyed");
+						aftermath.setCard2State("destroyed");
+						
+						//both cards will be destroyed
+						moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+						moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+					}
+					
+					//check for trigger on destroyed card
+					if(aftermath.getCard1State().equals("destroyed")) {
+						for(String attackAbility : card1.getAttackProperty()) {
+							if(attackAbility.indexOf("WTCID") != -1) {
+								aftermath.addAbility(actionCard1.getPlayer() + "#" + Abilities.valueOf(attackAbility).getAbility());
+							}
+						}
+					}
+					
+					if(aftermath.getCard2State().equals("destroyed")) {
+						for(String attackAbility : card2.getAttackProperty()) {
+							if(attackAbility.indexOf("WTCID") != -1) {
+								aftermath.addAbility(actionCard2.getPlayer() + "#" + Abilities.valueOf(attackAbility).getAbility());
+							}
 						}
 					}
 				}
-				
-				if(aftermath.getCard2State().equals("destroyed")) {
-					for(String attackAbility : card2.getAttackProperty()) {
-						if(attackAbility.indexOf("WTCID") != -1) {
-							aftermath.addAbility(actionCard2.getPlayer() + "#" + Abilities.valueOf(attackAbility).getAbility());
-						}
-					}
-				}
-				
 				break;
+				
 			}
 			default : {
 				break;
@@ -449,26 +459,29 @@ public class GameEngine {
 		}
 		// realm
 		case 1: {
-			return selectedZone.stream().filter(card -> card.getRealm().equals(filter)).collect(Collectors.toList())
+			return selectedZone.stream().filter(card -> card.getRealm().toUpperCase().equals(filter)).collect(Collectors.toList())
 					.size();
 		}
 		// class
 		case 2: {
-			return selectedZone.stream().filter(card -> card.getCardClass().equals(filter)).collect(Collectors.toList())
+			return selectedZone.stream().filter(card -> card.getCardClass().toUpperCase().equals(filter)).collect(Collectors.toList())
 					.size();
 		}
 		// less power
 		case 3: {
+			//TODO - get current power level, considering added power abilities
 			return selectedZone.stream().filter(card -> Integer.parseInt(card.getPower()) > Integer.parseInt(filter))
 					.collect(Collectors.toList()).size();
 		}
 		// more power
 		case 4: {
+			//TODO - get current power level, considering added power abilities
 			return selectedZone.stream().filter(card -> Integer.parseInt(card.getPower()) < Integer.parseInt(filter))
 					.collect(Collectors.toList()).size();
 		}
 		// power
 		case 5: {
+			//TODO - get current power level, considering added power abilities
 			return selectedZone.stream().filter(card -> Integer.parseInt(card.getPower()) == Integer.parseInt(filter))
 					.collect(Collectors.toList()).size();
 		}
