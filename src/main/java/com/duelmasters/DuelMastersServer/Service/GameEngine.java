@@ -318,7 +318,7 @@ public class GameEngine {
 				if(actionCard2.getZone().equals("shields")) {
 					moveCard(actionCard2.getPlayer(), actionCard2.getZone(), "hand", actionCard2.getIndex());
 					aftermath.setCard1State("");
-					aftermath.setCard2State("MTH");
+					aftermath.setCard2State("SMTH");
 				}
 				else {
 					//get cards power level (when attacking)
@@ -332,7 +332,7 @@ public class GameEngine {
 								attackingCardPower += Integer.parseInt(Abilities.valueOf(attackProp).getAbility());
 							}
 						}
-						attackingCardPower += getAddedPowerForCard(card1, false);
+						attackingCardPower += getAddedPowerForCard(card1, actionCard1.getPlayer(), false);
 					}
 					else {
 						attackingCardPower = Integer.parseInt(card1.getPower());
@@ -340,7 +340,7 @@ public class GameEngine {
 					
 					if(card2.getPower().indexOf("+") != -1) {
 						defendingCardPower = Integer.parseInt(card2.getPower().substring(0, card2.getPower().length() - 1));
-						defendingCardPower += getAddedPowerForCard(card2, true);
+						defendingCardPower += getAddedPowerForCard(card2, actionCard2.getPlayer(), true);
 					}
 					else {
 						defendingCardPower = Integer.parseInt(card2.getPower());
@@ -380,7 +380,46 @@ public class GameEngine {
 					if(aftermath.getCard1State().equals("destroyed")) {
 						for(String attackAbility : card1.getAttackProperty()) {
 							if(attackAbility.indexOf("WTCID") != -1) {
-								aftermath.addAbility(actionCard1.getPlayer() + "#" + Abilities.valueOf(attackAbility).getAbility());
+								String abilityWhenDestroyed = Abilities.valueOf(attackAbility).getAbility();
+								//instead of being destroyed, the creature will be moved to another zone
+								//no need to add this ability to the aftermath
+								//card status will be replaced
+								if(abilityWhenDestroyed.startsWith("MT")) {
+									//get card from graveyard
+									switch(abilityWhenDestroyed) {
+										case "MTH" : {
+											moveCard(actionCard1.getPlayer(), "graveyard", "hand",
+													getLastDestroyedCardIndexInGraveyard(actionCard1.getPlayer()));
+											aftermath.setCard1State("MTH");
+											break;
+										}
+										case "MTM" : {
+											moveCard(actionCard1.getPlayer(), "graveyard", "mana",
+													getLastDestroyedCardIndexInGraveyard(actionCard1.getPlayer()));
+											aftermath.setCard1State("MTM");
+											break;
+										}
+										case "MTS" : {
+											moveCard(actionCard1.getPlayer(), "graveyard", "shields",
+													getLastDestroyedCardIndexInGraveyard(actionCard1.getPlayer()));
+											aftermath.setCard1State("MTS");
+											break;
+										}
+										case "MTD" : {
+											moveCard(actionCard1.getPlayer(), "graveyard", "deck",
+													getLastDestroyedCardIndexInGraveyard(actionCard1.getPlayer()));
+											aftermath.setCard1State("MTD");
+											break;
+										}
+										default : {
+											break;
+										}
+									}
+								}
+								else {
+									aftermath.addAbility(actionCard1.getPlayer() + "#"
+											+ abilityWhenDestroyed);
+								}
 							}
 						}
 					}
@@ -388,7 +427,46 @@ public class GameEngine {
 					if(aftermath.getCard2State().equals("destroyed")) {
 						for(String attackAbility : card2.getAttackProperty()) {
 							if(attackAbility.indexOf("WTCID") != -1) {
-								aftermath.addAbility(actionCard2.getPlayer() + "#" + Abilities.valueOf(attackAbility).getAbility());
+								String abilityWhenDestroyed = Abilities.valueOf(attackAbility).getAbility();
+								//instead of being destroyed, the creature will be moved to another zone
+								//no need to add this ability to the aftermath
+								//card status will be replaced
+								if(abilityWhenDestroyed.startsWith("MT")) {
+									//get card from graveyard
+									switch(abilityWhenDestroyed) {
+										case "MTH" : {
+											moveCard(actionCard2.getPlayer(), "graveyard", "hand",
+													getLastDestroyedCardIndexInGraveyard(actionCard2.getPlayer()));
+											aftermath.setCard2State("MTH");
+											break;
+										}
+										case "MTM" : {
+											moveCard(actionCard2.getPlayer(), "graveyard", "mana",
+													getLastDestroyedCardIndexInGraveyard(actionCard2.getPlayer()));
+											aftermath.setCard2State("MTM");
+											break;
+										}
+										case "MTS" : {
+											moveCard(actionCard2.getPlayer(), "graveyard", "shields",
+													getLastDestroyedCardIndexInGraveyard(actionCard2.getPlayer()));
+											aftermath.setCard2State("MTS");
+											break;
+										}
+										case "MTD" : {
+											moveCard(actionCard2.getPlayer(), "graveyard", "deck",
+													getLastDestroyedCardIndexInGraveyard(actionCard2.getPlayer()));
+											aftermath.setCard2State("MTD");
+											break;
+										}
+										default : {
+											break;
+										}
+									}
+								}
+								else {
+									aftermath.addAbility(actionCard2.getPlayer() + "#"
+											+ abilityWhenDestroyed);
+								}
 							}
 						}
 					}
@@ -405,7 +483,11 @@ public class GameEngine {
 		return aftermath;
 	}
 	
-	private int getAddedPowerForCard(GameCardDTO card, boolean noAttackingAddedPower) {
+	private int getLastDestroyedCardIndexInGraveyard(String player) {
+		return getZone("GV0", player).size() - 1;
+	}
+	
+	private int getAddedPowerForCard(GameCardDTO card, String player, boolean noAttackingAddedPower) {
 		int finalAddedPower = 0;
 		for(String addedPowerProp : card.getAddedPower()) {
 			//ATCG ability will not be checked, as this card is not attacking
@@ -427,7 +509,7 @@ public class GameEngine {
 				int addedPowerLevel = Integer.parseInt(encodedAblilityParts[0].substring(3));
 				//count cards with filter in zone
 				int nrOfCardsInZoneWithFilter = count(Integer.parseInt(encodedAblilityParts[3]),
-						encodedAblilityParts[4], encodedAblilityParts[5]);
+						encodedAblilityParts[4], encodedAblilityParts[5], player);
 				//check the combination of type and count conditions
 				//compute the final added power
 				if(encodedAblilityParts[1].equals("NUL") && encodedAblilityParts[2].equals("ALL")) {
@@ -437,7 +519,7 @@ public class GameEngine {
 					finalAddedPower = addedPowerLevel;
 				}
 				else if(encodedAblilityParts[1].equals("ONLY") && encodedAblilityParts[2].equals("ALL")) {
-					if(nrOfCardsInZoneWithFilter == count(0, null, encodedAblilityParts[5])) {
+					if(nrOfCardsInZoneWithFilter == count(0, null, encodedAblilityParts[5], player)) {
 						finalAddedPower = addedPowerLevel;
 					}
 				}
@@ -448,9 +530,9 @@ public class GameEngine {
 	
 	// utils
 
-	public int count(int type, String filter, String zone) {
+	public int count(int type, String filter, String zone, String player) {
 
-		ArrayList<GameCardDTO> selectedZone = getZone(zone);
+		ArrayList<GameCardDTO> selectedZone = getZone(zone, player);
 
 		switch (type) {
 		// no filter
@@ -517,9 +599,9 @@ public class GameEngine {
 		}
 	}
 
-	public ArrayList<Integer> get(int type, String filter, String zone) {
+	public ArrayList<Integer> get(int type, String filter, String zone, String player) {
 
-		ArrayList<GameCardDTO> selectedZone = getZone(zone);
+		ArrayList<GameCardDTO> selectedZone = getZone(zone, player);
 		ArrayList<Integer> selectedCards = new ArrayList<>();
 
 		switch (type) {
@@ -623,14 +705,24 @@ public class GameEngine {
 
 	}
 
-	private ArrayList<GameCardDTO> getZone(String zone) {
+	private ArrayList<GameCardDTO> getZone(String zone, String player) {
 
 		switch (zone) {
 		case "BZ0": {
-			return player1.getBattleZone();
+			if(player.equals("player1")) {
+				return player1.getBattleZone();
+			}
+			else {
+				return player2.getBattleZone();
+			}
 		}
 		case "BZ1": {
-			return player2.getBattleZone();
+			if(player.equals("player1")) {
+				return player2.getBattleZone();
+			}
+			else {
+				return player1.getBattleZone();
+			}
 		}
 		case "BZ2": {
 			 ArrayList<GameCardDTO> cards = player1.getBattleZone();
@@ -638,10 +730,20 @@ public class GameEngine {
 			 return cards;
 		}
 		case "MN0": {
-			return player1.getManaZone();
+			if(player.equals("player1")) {
+				return player1.getManaZone();
+			}
+			else {
+				return player2.getManaZone();
+			}
 		}
 		case "MN1": {
-			return player2.getManaZone();
+			if(player.equals("player1")) {
+				return player2.getManaZone();
+			}
+			else {
+				return player1.getManaZone();
+			}
 		}
 		case "MN2": {
 			 ArrayList<GameCardDTO> cards = player1.getManaZone();
@@ -649,10 +751,20 @@ public class GameEngine {
 			 return cards;
 		}
 		case "GV0": {
-			return player1.getGraveyard();
+			if(player.equals("player1")) {
+				return player1.getGraveyard();
+			}
+			else {
+				return player2.getGraveyard();
+			}
 		}
 		case "GV1": {
-			return player2.getGraveyard();
+			if(player.equals("player1")) {
+				return player2.getGraveyard();
+			}
+			else {
+				return player1.getGraveyard();
+			}
 		}
 		case "GV2": {
 			 ArrayList<GameCardDTO> cards = player1.getGraveyard();
@@ -660,10 +772,20 @@ public class GameEngine {
 			 return cards;
 		}
 		case "DK0": {
-			return player1.getDeck();
+			if(player.equals("player1")) {
+				return player1.getDeck();
+			}
+			else {
+				return player2.getDeck();
+			}
 		}
 		case "DK1": {
-			return player2.getDeck();
+			if(player.equals("player1")) {
+				return player2.getDeck();
+			}
+			else {
+				return player1.getDeck();
+			}
 		}
 		case "DK2": {
 			 ArrayList<GameCardDTO> cards = player1.getDeck();
@@ -671,10 +793,20 @@ public class GameEngine {
 			 return cards;
 		}
 		case "HD0": {
-			return player1.getHand();
+			if(player.equals("player1")) {
+				return player1.getHand();
+			}
+			else {
+				return player2.getHand();
+			}
 		}
 		case "HD1": {
-			return player2.getHand();
+			if(player.equals("player1")) {
+				return player2.getHand();
+			}
+			else {
+				return player1.getHand();
+			}
 		}
 		case "HD2": {
 			 ArrayList<GameCardDTO> cards = player1.getHand();
@@ -682,10 +814,20 @@ public class GameEngine {
 			 return cards;
 		}
 		case "SD0": {
-			return player1.getShields();
+			if(player.equals("player1")) {
+				return player1.getShields();
+			}
+			else {
+				return player2.getShields();
+			}
 		}
 		case "SD1": {
-			return player2.getShields();
+			if(player.equals("player1")) {
+				return player2.getShields();
+			}
+			else {
+				return player1.getShields();
+			}
 		}
 		case "SD2": {
 			 ArrayList<GameCardDTO> cards = player1.getShields();
