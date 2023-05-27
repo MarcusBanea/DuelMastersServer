@@ -321,59 +321,101 @@ public class GameEngine {
 					aftermath.setCard2State("SMTH");
 				}
 				else {
-					//get cards power level (when attacking)
-					int attackingCardPower = 0;
-					int defendingCardPower = 0;
-					if(card1.getPower().indexOf("+") != -1) {
-						attackingCardPower = Integer.parseInt(card1.getPower().substring(0, card1.getPower().length() - 1));
-						//check for "PA" attack property
-						for(String attackProp : card1.getAttackProperty()) {
-							if(attackProp.startsWith("PA")) {
-								attackingCardPower += Integer.parseInt(Abilities.valueOf(attackProp).getAbility());
-							}
+					//check if the attacking card has slayer type
+					boolean attackingCardIsSlayer = false;
+					for(String type : card1.getType()) {
+						if(type.equals("SL0")) {
+							attackingCardIsSlayer = true;
 						}
-						attackingCardPower += getAddedPowerForCard(card1, actionCard1.getPlayer(), false);
-					}
-					else {
-						attackingCardPower = Integer.parseInt(card1.getPower());
 					}
 					
-					if(card2.getPower().indexOf("+") != -1) {
-						defendingCardPower = Integer.parseInt(card2.getPower().substring(0, card2.getPower().length() - 1));
-						defendingCardPower += getAddedPowerForCard(card2, actionCard2.getPlayer(), true);
-					}
-					else {
-						defendingCardPower = Integer.parseInt(card2.getPower());
+					//check if the defending cards has slayer type
+					boolean defendingCardIsSlayer = false;
+					for(String type : card2.getType()) {
+						if(type.equals("SL0")) {
+							defendingCardIsSlayer = true;
+						}
 					}
 					
-					//execute action attack
-					//move cards to appropriate zones and modify their states (power level, speed attacker, ...)
-					//check for triggered abilities after the execution
-					if(attackingCardPower > defendingCardPower) {
+					//if both cards have type slayer, not battle happens
+					if(attackingCardIsSlayer && defendingCardIsSlayer) {
+						aftermath.setCard1State("");
+						aftermath.setCard2State("");
 						
-						//card2 will be destroyed
-						moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
-						
+						return aftermath;
+					}
+					
+					//if attacking card is slayer and the defending card is not a slayer, then the defending card is destroyed
+					else if(attackingCardIsSlayer && !defendingCardIsSlayer) {
 						aftermath.setCard1State("");
 						aftermath.setCard2State("destroyed");
 						
+						moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
 					}
-					else if(attackingCardPower < defendingCardPower) {
-						
+					
+					//if defending card is slayer and the attacking card is not a slayer, then the attacking card is destroyed
+					else if(!attackingCardIsSlayer && defendingCardIsSlayer) {
 						aftermath.setCard1State("destroyed");
 						aftermath.setCard2State("");
 						
-						//card1 will be destroyed
 						moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
 					}
+
 					else {
+						//get cards power level (when attacking)
+						int attackingCardPower = 0;
+						int defendingCardPower = 0;
+						if(card1.getPower().indexOf("+") != -1) {
+							attackingCardPower = Integer.parseInt(card1.getPower().substring(0, card1.getPower().length() - 1));
+							//check for "PA" attack property
+							for(String attackProp : card1.getAttackProperty()) {
+								if(attackProp.startsWith("PA")) {
+									attackingCardPower += Integer.parseInt(Abilities.valueOf(attackProp).getAbility());
+								}
+							}
+							attackingCardPower += getAddedPowerForCard(card1, actionCard1.getPlayer(), false);
+						}
+						else {
+							attackingCardPower = Integer.parseInt(card1.getPower());
+						}
 						
-						aftermath.setCard1State("destroyed");
-						aftermath.setCard2State("destroyed");
+						if(card2.getPower().indexOf("+") != -1) {
+							defendingCardPower = Integer.parseInt(card2.getPower().substring(0, card2.getPower().length() - 1));
+							defendingCardPower += getAddedPowerForCard(card2, actionCard2.getPlayer(), true);
+						}
+						else {
+							defendingCardPower = Integer.parseInt(card2.getPower());
+						}
 						
-						//both cards will be destroyed
-						moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
-						moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+						//execute action attack
+						//move cards to appropriate zones and modify their states (power level, speed attacker, ...)
+						//check for triggered abilities after the execution
+						if(attackingCardPower > defendingCardPower) {
+							
+							//card2 will be destroyed
+							moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+							
+							aftermath.setCard1State("");
+							aftermath.setCard2State("destroyed");
+							
+						}
+						else if(attackingCardPower < defendingCardPower) {
+							
+							aftermath.setCard1State("destroyed");
+							aftermath.setCard2State("");
+							
+							//card1 will be destroyed
+							moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+						}
+						else {
+							
+							aftermath.setCard1State("destroyed");
+							aftermath.setCard2State("destroyed");
+							
+							//both cards will be destroyed
+							moveCard(actionCard1.getPlayer(), "battleZone", "graveyard", actionCard1.getIndex());
+							moveCard(actionCard2.getPlayer(), "battleZone", "graveyard", actionCard2.getIndex());
+						}
 					}
 					
 					//check for trigger on destroyed card
