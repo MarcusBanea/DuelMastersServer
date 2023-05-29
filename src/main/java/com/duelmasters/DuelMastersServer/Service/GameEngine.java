@@ -2,6 +2,7 @@ package com.duelmasters.DuelMastersServer.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -68,6 +69,64 @@ public class GameEngine {
 		
 		return aftermath;
 		
+	}
+	
+	public void updateServerStateAfterAbilityExecution(String[] cards, String action) {
+		//sort cards descending, so that the indexes in zones remain consistent
+		Arrays.sort(cards, Collections.reverseOrder());
+		//check action
+		String zoneTo = "";
+		String specialAction = "";
+		//check for moving-type ability
+		if(action.startsWith("MT") || action.equals("DES")) {
+			switch(action) { 
+				case "DES" : {
+					zoneTo = "graveyard";
+					break;
+				}
+				case "MTM" : {
+					zoneTo = "manaZone";
+					break;
+				}
+				case "MTH" : {
+					zoneTo = "hand";
+					break;
+				}
+				case "MTS" : {
+					zoneTo = "shields";
+					break;
+				}
+				case "MTD" : {
+					zoneTo = "deck";
+					break;
+				}
+				default : {
+					break;
+				}
+			}
+		}
+		else {
+			specialAction = action;
+		}
+		
+		for(String encodedCard : cards) {
+			String[] decodedCard = encodedCard.split(" ");
+			/* decodedCard[0] - player
+			 * decodedCard[1] - zone
+			 * decodedCard[2] - index
+			*/
+			GameCardDTO card = getCardInZone(decodedCard[0], decodedCard[1], Integer.parseInt(decodedCard[2]));
+			//if there is a moving-type ability, move the card
+			if(!zoneTo.equals("")) {
+				addCardInZone(decodedCard[0], zoneTo, card);
+				removeCardInZone(decodedCard[0], decodedCard[1], Integer.parseInt(decodedCard[2]));
+			}
+			else {
+				if(specialAction.equals("TAP")) {
+					//TODO
+				}
+			}
+		}
 	}
 	
 	public ArrayList<GameCardDTO> getCardsInZone(String playerIndicator, String zone) {

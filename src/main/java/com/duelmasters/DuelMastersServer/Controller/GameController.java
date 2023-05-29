@@ -212,6 +212,11 @@ public class GameController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/informServer/{cards}/{action}")
+	public void updateServerStateAfterAbilityExecution(@PathVariable String[] cards, @PathVariable String action) {
+		gameEngine.updateServerStateAfterAbilityExecution(cards, action);
+	}
+	
 	@GetMapping(value = "/getAttackOptions/{player}/{zone}/{index}")
 	public ResponseEntity<Object> selectCardGetAttackOptions(@PathVariable String player, @PathVariable String zone,
 			@PathVariable int index) {
