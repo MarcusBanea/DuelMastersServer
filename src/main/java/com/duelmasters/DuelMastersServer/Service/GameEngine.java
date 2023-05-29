@@ -5,14 +5,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.duelmasters.DuelMastersServer.Domain.Abilities;
-import com.duelmasters.DuelMastersServer.Domain.Ability;
 import com.duelmasters.DuelMastersServer.Domain.ActionCard;
 import com.duelmasters.DuelMastersServer.Domain.Aftermath;
 import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
+import com.duelmasters.DuelMastersServer.Service.AI.AIState;
 
 import lombok.Data;
 
@@ -25,11 +26,13 @@ public class GameEngine {
 
 	private PlayerDTO player2;
 	
+	@Autowired
+	public AIState aiState;
+	
 	public PlayerDTO getPlayer(String player) {
 		return player.equals("player1") ? this.player1 : this.player2;
 	}
 	
-
 	// test
 	public void drawCard(String player) {
 		switch (player) {
@@ -941,4 +944,13 @@ public class GameEngine {
 		}
 	}
 
+	
+	
+	
+	
+	//AI logic
+	
+	//check draw card
+	//check hand
+	//check battle zone
 }
