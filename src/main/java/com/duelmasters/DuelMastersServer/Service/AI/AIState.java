@@ -47,73 +47,106 @@ public class AIState {
 	
 	public ArrayList<AIMove> makeRandomAction() {
 		ArrayList<AIMove> aiMoves = new ArrayList<>();
-		AIMove aiMove = new AIMove();
-		
-		AIAction randomAction = AIAction.getRandomAction();
-		
 		Random rand = new Random();
 		
-		switch(randomAction) {
-			case DRAW_CARD : {
-				
-				//build AIMove object that will be sent to the client
-				aiMove.addCard("player2 deck hand 0");
-				aiMove.setAction("MTH");
-				
-				player.getHand().add(player.getDeck().get(0));
-				player.getDeck().remove(0);
-				break;
-			}
-			case MOVE_CARD_TO_MANA: {
-				//get random card from hand
-				int randomCardIndex = rand.nextInt(player.getHand().size());
-				aiMove.addCard("player2 hand manaZone " + randomCardIndex);
-				aiMove.setAction("MTM");
-				
-				player.getManaZone().add(player.getHand().get(randomCardIndex));
-				player.getHand().remove(randomCardIndex);
-				
-				if(player.getHand().size() == 0) {
-					this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_BATTLEZONE);
-				}
-				
-				this.manaAvailableThisTurn++;
+		while(this.getPossibleActionsThisTurn().size() != 0) {
+			AIMove aiMove = new AIMove();
+			
+			if(player.getHand().size() == 0) {
 				this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_MANA);
-				break;
+				this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_BATTLEZONE);
 			}
-			case MOVE_CARD_TO_BATTLEZONE: {
-				//get random card from hand
-				int randomCardIndex = rand.nextInt(player.getHand().size());
-				aiMove.addCard("player2 hand battleZone " + randomCardIndex);
-				aiMove.setAction("MTB");
-				
-				//update mana available and tap the creature
-				this.manaAvailableThisTurn -= Integer.parseInt(player.getHand().get(randomCardIndex).getMana());
-				//TODO - check if speed attacker
-				player.getHand().get(randomCardIndex).setTapped(true);
-
-				player.getBattleZone().add(player.getHand().get(randomCardIndex));
-				player.getHand().remove(randomCardIndex);
-				
-				if(player.getHand().size() == 0) {
-					this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_BATTLEZONE);
-					this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_MANA);
+			if(player.getDeck().size() == 0) {
+				this.possibleActionsThisTurn.remove(AIAction.DRAW_CARD);
+			}
+			
+			AIAction randomAction = possibleActionsThisTurn.get(rand.nextInt(possibleActionsThisTurn.size()));
+			
+			switch(randomAction) {
+				case DRAW_CARD : {
+					
+					//build AIMove object that will be sent to the client
+					aiMove.addCard("player2 deck hand 0");
+					aiMove.setAction("MTH");
+					
+					player.getHand().add(player.getDeck().get(0));
+					player.getDeck().remove(0);
+					
+					this.possibleActionsThisTurn.remove(AIAction.DRAW_CARD);
+					break;
 				}
-				
-				break;
+				case MOVE_CARD_TO_MANA: {
+					//get random card from hand
+					int randomCardIndex = rand.nextInt(player.getHand().size());
+					aiMove.addCard("player2 hand manaZone " + randomCardIndex);
+					aiMove.setAction("MTM");
+					
+					player.getManaZone().add(player.getHand().get(randomCardIndex));
+					player.getHand().remove(randomCardIndex);
+					
+					this.manaAvailableThisTurn++;
+					this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_MANA);
+					break;
+				}
+				case MOVE_CARD_TO_BATTLEZONE: {
+					//get all cards that can be put into battle zone
+					//considering available mana
+					ArrayList<GameCardDTO> validHandCards = new ArrayList<>();
+					for(GameCardDTO card : player.getHand()) {
+						if (Integer.parseInt(card.getMana()) <= this.manaAvailableThisTurn) {
+							validHandCards.add(card);
+						}
+					}
+					
+					//get random card from hand
+					int nrOfCardsInHand = validHandCards.size();
+					int randomCardIndex = rand.nextInt(nrOfCardsInHand);
+					randomCardIndex = player.getHand().indexOf(validHandCards.get(randomCardIndex));
+					
+					aiMove.addCard("player2 hand battleZone " + randomCardIndex);
+					aiMove.setAction("MTB");
+					
+					//update mana available and tap the creature
+					this.manaAvailableThisTurn -= Integer.parseInt(player.getHand().get(randomCardIndex).getMana());
+					//TODO - check if speed attacker
+					player.getHand().get(randomCardIndex).setTapped(true);
+
+					player.getBattleZone().add(player.getHand().get(randomCardIndex));
+					player.getHand().remove(randomCardIndex);
+					
+					if(player.getHand().size() == 0) {
+						break;
+					}
+					
+					//check if there is any card in hand that can be put into battlezone
+					//considering available mana
+					boolean hasEnoughManaForMove = false;
+					for(GameCardDTO card : player.getHand()) {
+						if(Integer.parseInt(card.getMana()) <= this.manaAvailableThisTurn) {
+							hasEnoughManaForMove = true;
+						}
+					}
+					
+					if(!hasEnoughManaForMove) {
+						this.possibleActionsThisTurn.remove(AIAction.MOVE_CARD_TO_BATTLEZONE);
+					}
+					
+					break;
+				}
+				/*
+				case SELECT_CARD_FOR_ATTACK: {
+					
+					break;
+				}
+				*/
+				case NO_ACTION: {
+					possibleActionsThisTurn = new ArrayList<>();
+					return aiMoves;
+				}
 			}
-			/*
-			case SELECT_CARD_FOR_ATTACK: {
-				
-				break;
-			}
-			*/
-			case NO_ACTION: {
-				
-				break;
-			}
+			aiMoves.add(aiMove);
 		}
-		aiMoves.add(aiMove);
+		possibleActionsThisTurn = new ArrayList<>();
 		return aiMoves;
 	}
 }
