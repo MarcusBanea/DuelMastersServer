@@ -1,0 +1,33 @@
+Git:
+https://www.nobledesktop.com/learn/git/what-is-git
+https://shitalmule04.github.io/file-status-lifecycle-in-git.html
+https://www.javatpoint.com/git
+https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F
+
+SmartGit:
+https://www.syntevo.com/smartgit/
+https://www.syone.com/syntevo-smart-git
+
+Java:
+http://www.sietk.org/downloads/javabook.pdf
+https://www.geeksforgeeks.org/encapsulation-in-java/
+Imagine masina: https://www.claytex.com/tech-blog/getting-the-best-out-of-your-simulation-software-your-demo-licenses-and-yourself/attachment/hybrid-vehicle-mode-all-subsystems/
+
+Spring Boot:
+https://www.javatpoint.com/spring-boot-architecture
+https://www.geeksforgeeks.org/spring-boot-architecture/
+https://www.geeksforgeeks.org/introduction-to-spring-boot/
+
+JavaScript:
+https://exploringjs.com/impatient-js/downloads/impatient-js-preview-book.pdf
+https://eloquentjavascript.net/Eloquent_JavaScript_small.pdf
+https://www.w3schools.com/js/js_htmldom.asp
+https://everythingcomputerscience.com/books/all.pdf ***jsBible***
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/What_is_JavaScript
+
+DOM:
+https://en.wikipedia.org/wiki/Document_Object_Model ***imagine arbore***
+https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
+
+Vue js
+https://vuejs.org/guide/introduction.html#what-is-vue
