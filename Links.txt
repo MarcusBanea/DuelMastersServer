@@ -30,4 +30,4 @@ https://en.wikipedia.org/wiki/Document_Object_Model ***imagine arbore***
 https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
 
 Vue js
-https://vuejs.org/guide/introduction.html#what-is-vue
+https://vuejs.org
