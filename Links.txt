@@ -29,5 +29,11 @@ DOM:
 https://en.wikipedia.org/wiki/Document_Object_Model ***imagine arbore***
 https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
 
-Vue js
+Vue js:
 https://vuejs.org
+
+Pinia:
+https://pinia.vuejs.org/introduction.html
+
+Xstate:
+https://xstate.js.org/docs/
