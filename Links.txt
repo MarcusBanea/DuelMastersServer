@@ -44,3 +44,15 @@ https://www.techtarget.com/searchdatamanagement/definition/MongoDB
 
 VSC:
 https://www.infoworld.com/article/3666488/what-is-visual-studio-code-microsofts-extensible-code-editor.html
+https://code.visualstudio.com/docs
+
+Wireframe:
+https://balsamiq.com/learn/articles/what-are-wireframes/#why-use-wireframes
+
+Mockup:
+
+Algoritmi de joc:
+https://www.scribd.com/document/331693684/Inteligenta-artificiala-Jocuri-Algoritmul-minimax-laborator#
+https://www.cs.umd.edu/class/spring2018/cmsc425/Lects/lect21-ai-dec-making.pdf
+https://hai.stanford.edu/news/designing-decision-making-algorithms-uncertain-world
+https://www.geeksforgeeks.org/optimal-decision-making-in-games/
