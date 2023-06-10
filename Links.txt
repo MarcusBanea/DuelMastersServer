@@ -37,3 +37,10 @@ https://pinia.vuejs.org/introduction.html
 
 Xstate:
 https://xstate.js.org/docs/
+https://egghead.io/courses/introduction-to-state-machines-using-xstate
+
+MongoDB:
+https://www.techtarget.com/searchdatamanagement/definition/MongoDB
+
+VSC:
+https://www.infoworld.com/article/3666488/what-is-visual-studio-code-microsofts-extensible-code-editor.html
