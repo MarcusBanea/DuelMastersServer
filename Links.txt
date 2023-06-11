@@ -56,3 +56,5 @@ https://www.scribd.com/document/331693684/Inteligenta-artificiala-Jocuri-Algorit
 https://www.cs.umd.edu/class/spring2018/cmsc425/Lects/lect21-ai-dec-making.pdf
 https://hai.stanford.edu/news/designing-decision-making-algorithms-uncertain-world
 https://www.geeksforgeeks.org/optimal-decision-making-in-games/
+https://www.scribd.com/document/331693684/Inteligenta-artificiala-Jocuri-Algoritmul-minimax-laborator
+https://www.javatpoint.com/mini-max-algorithm-in-ai
