@@ -1,8 +1,6 @@
-package com.duelmasters.DuelMastersServer.Domain;
+package com.duelmasters.DuelMastersServer.Domain.DTO;
 
 import java.util.ArrayList;
-
-import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

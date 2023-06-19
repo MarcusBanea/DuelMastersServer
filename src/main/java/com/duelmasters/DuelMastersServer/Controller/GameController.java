@@ -14,15 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.duelmasters.DuelMastersServer.Domain.ActionCard;
-import com.duelmasters.DuelMastersServer.Domain.Aftermath;
-import com.duelmasters.DuelMastersServer.Domain.Player;
-import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
-import com.duelmasters.DuelMastersServer.Service.GameEngine;
+import com.duelmasters.DuelMastersServer.Domain.DTO.PlayerDTO;
+import com.duelmasters.DuelMastersServer.Domain.Types.ActionCard;
+import com.duelmasters.DuelMastersServer.Domain.Types.Aftermath;
+import com.duelmasters.DuelMastersServer.Domain.Types.Player;
+import com.duelmasters.DuelMastersServer.Service.AI.AIMove;
 import com.duelmasters.DuelMastersServer.Service.AI.AIState;
 import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
+import com.duelmasters.DuelMastersServer.Service.Game.PlayerVsPlayerEngine;
 
 @RestController
 @RequestMapping("/game")
@@ -32,7 +33,7 @@ public class GameController {
 	private MapperDTO mapper;
 	
 	@Autowired
-	GameEngine gameEngine;
+	private PlayerVsPlayerEngine gameEngine;
 	
 	@Autowired
 	public GameController(UserService userService, MapperDTO mapperDTO) {
@@ -43,6 +44,8 @@ public class GameController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@GetMapping(value = "/initialize/{userId1}/{userId2}")
 	public ResponseEntity<Object> initialize(@PathVariable String userId1, @PathVariable String userId2) throws IOException {
+		
+		gameEngine.setUsingAI(false);
 		
 		List<GameCard> player1DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId1, 25);
 		List<GameCard> player2DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId2, 25);
@@ -143,7 +146,9 @@ public class GameController {
 	@GetMapping(value = "/initializeMatchVsAI/{userId1}")
 	public ResponseEntity<Object> initialize(@PathVariable String userId1) throws IOException {
 		
-		gameEngine.aiState = new AIState();
+		//PlayerVsPlayerEngine.AIState aiState = new AIState();
+		//gameEngine.setAiState(new AIState());
+		gameEngine.setUsingAI(true);
 		
 		List<GameCard> player1DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId1, 25);
 		List<GameCard> player2DeckCards = userService.generateRandomDeckFromCollectionWithGameCards(userId1, 25);
@@ -222,7 +227,8 @@ public class GameController {
 		player2.setGraveyard(new ArrayList<>());
 		
 		gameEngine.setPlayer1(mapper.playerToPlayerDTO(player1));
-		gameEngine.aiState.setPlayer(mapper.playerToPlayerDTO(player2));
+		gameEngine.setPlayer2(mapper.playerToPlayerDTO(player2));
+		gameEngine.getAiState().setPlayer(mapper.playerToPlayerDTO(player2));
 		
 		return new ResponseEntity<>(Arrays.asList(player1, player2), HttpStatus.OK);
 	}
@@ -336,8 +342,10 @@ public class GameController {
 	
 	@GetMapping(value = "/getAIMove")
 	public ResponseEntity<Object> getAIMove() {
-		gameEngine.aiState.initNewTurn();
-		return new ResponseEntity<>(gameEngine.aiState.makeRandomAction(), HttpStatus.OK);
+		gameEngine.getAiState().initNewTurn();
+		ArrayList<AIMove> aiActions = gameEngine.getAiState().makeRandomAction();
+		gameEngine.setPlayer2(gameEngine.getAiState().getPlayer());
+		return new ResponseEntity<>(aiActions, HttpStatus.OK);
 	}
 
 }

@@ -8,10 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.duelmasters.DuelMastersServer.Domain.Player;
-import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
+import com.duelmasters.DuelMastersServer.Domain.Types.Player;
 import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
 
 @Component

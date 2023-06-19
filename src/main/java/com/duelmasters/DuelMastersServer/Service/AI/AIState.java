@@ -5,8 +5,8 @@ import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
-import com.duelmasters.DuelMastersServer.Domain.PlayerDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.GameCardDTO;
+import com.duelmasters.DuelMastersServer.Domain.DTO.PlayerDTO;
 
 import lombok.Data;
 
@@ -59,13 +59,26 @@ public class AIState {
 			if(player.getDeck().size() == 0) {
 				this.possibleActionsThisTurn.remove(AIAction.DRAW_CARD);
 			}
+			if(player.getBattleZone().size() == 0) {
+				this.possibleActionsThisTurn.remove(AIAction.SELECT_CARD_FOR_ATTACK);
+			}
+			else {
+				boolean hasUntappedCardsInBattleZone = false;
+				for(GameCardDTO card : player.getBattleZone()) {
+					if(!card.isTapped()) {
+						hasUntappedCardsInBattleZone = true;
+					}
+				}
+				if(!hasUntappedCardsInBattleZone) {
+					this.possibleActionsThisTurn.remove(AIAction.SELECT_CARD_FOR_ATTACK);
+				}
+			}
 			
 			AIAction randomAction = possibleActionsThisTurn.get(rand.nextInt(possibleActionsThisTurn.size()));
 			
 			switch(randomAction) {
 				case DRAW_CARD : {
 					
-					//build AIMove object that will be sent to the client
 					aiMove.addCard("player2 deck hand 0");
 					aiMove.setAction("MTH");
 					
@@ -133,12 +146,23 @@ public class AIState {
 					
 					break;
 				}
-				/*
 				case SELECT_CARD_FOR_ATTACK: {
+					
+					//get all untapped cards in the battle zone
+					//that can attack
+					//check attack properties
+					ArrayList<GameCardDTO> untappedCardsInBattleZone = new ArrayList<>();
+					for(GameCardDTO card : player.getBattleZone()) {
+						if(!card.isTapped()) {
+							
+							untappedCardsInBattleZone.add(card);
+						}
+					}
+					
+					
 					
 					break;
 				}
-				*/
 				case NO_ACTION: {
 					possibleActionsThisTurn = new ArrayList<>();
 					return aiMoves;

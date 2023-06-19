@@ -1,4 +1,4 @@
-package com.duelmasters.DuelMastersServer.Service;
+package com.duelmasters.DuelMastersServer.Service.Game;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.duelmasters.DuelMastersServer.Domain;
+package com.duelmasters.DuelMastersServer.Domain.Types;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

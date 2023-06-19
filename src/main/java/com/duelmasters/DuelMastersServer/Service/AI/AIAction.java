@@ -6,8 +6,8 @@ public enum AIAction {
 	NO_ACTION,
 	DRAW_CARD,
 	MOVE_CARD_TO_MANA,
-	MOVE_CARD_TO_BATTLEZONE;
-	//SELECT_CARD_FOR_ATTACK;
+	MOVE_CARD_TO_BATTLEZONE,
+	SELECT_CARD_FOR_ATTACK;
 	
 	private static Random rand = new Random();
 	
