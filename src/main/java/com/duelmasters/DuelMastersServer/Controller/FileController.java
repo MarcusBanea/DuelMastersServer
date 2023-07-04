@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.LoadFile;
-import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.FileService;
 
 @RestController
 @CrossOrigin("*")

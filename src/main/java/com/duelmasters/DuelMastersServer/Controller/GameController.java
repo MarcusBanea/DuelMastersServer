@@ -22,8 +22,8 @@ import com.duelmasters.DuelMastersServer.Domain.Types.Aftermath;
 import com.duelmasters.DuelMastersServer.Domain.Types.Player;
 import com.duelmasters.DuelMastersServer.Service.AI.AIMove;
 import com.duelmasters.DuelMastersServer.Service.AI.AIState;
-import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
 import com.duelmasters.DuelMastersServer.Service.Game.PlayerVsPlayerEngine;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.UserService;
 
 @RestController
 @RequestMapping("/game")

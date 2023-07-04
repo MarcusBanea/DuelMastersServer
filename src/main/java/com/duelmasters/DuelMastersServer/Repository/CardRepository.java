@@ -9,9 +9,11 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 
+@Repository
 public interface CardRepository extends MongoRepository<Card, String> {
 
 	Optional<Card> findByName(String name);

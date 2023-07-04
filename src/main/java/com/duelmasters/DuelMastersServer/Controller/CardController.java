@@ -19,23 +19,27 @@ import org.springframework.web.multipart.MultipartFile;
 import com.duelmasters.DuelMastersServer.Domain.DTO.CardDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
-import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
-import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.CardService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.FileService;
 
 @RestController
-//@AllArgsConstructor
 @RequestMapping("/cards")
 public class CardController {
 
 	private CardService cardService;
 	private FileService fileService;
 	private MapperDTO mapper;
-
+	
 	@Autowired
 	public CardController(CardService cardService, FileService fileService, MapperDTO mapperDTO) {
 		this.cardService = cardService;
 		this.fileService = fileService;
 		this.mapper = mapperDTO;
+	}
+	
+	@GetMapping
+	public List<Card> getAll() {
+		return cardService.getAllCards();
 	}
 	
 	@GetMapping(value = "/getOne/{cardId}")
@@ -52,12 +56,7 @@ public class CardController {
 	public ResponseEntity<Object> getGameCard(@PathVariable String cardId) throws IOException{
 		return new ResponseEntity<>(cardService.getGameCard(cardId), HttpStatus.OK);
 	}
-
-	@GetMapping
-	public List<Card> getAll() {
-		return cardService.getAllCards();
-	}
-
+	
 	@PostMapping(value = "/add", consumes = { "multipart/form-data" })
 	public ResponseEntity<Object> createCard(@RequestPart Card card, @RequestPart("file") MultipartFile file)
 			throws IOException {

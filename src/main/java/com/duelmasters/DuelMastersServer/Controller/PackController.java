@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Pack;
-import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.PackService;
 
 @RestController
 @RequestMapping("/packs")

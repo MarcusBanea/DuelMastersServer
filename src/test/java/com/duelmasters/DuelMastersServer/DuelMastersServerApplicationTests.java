@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
-import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
-import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
-import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
-import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.CardService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.FileService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.PackService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.UserService;
 
 @SpringBootTest
 class DuelMastersServerApplicationTests {

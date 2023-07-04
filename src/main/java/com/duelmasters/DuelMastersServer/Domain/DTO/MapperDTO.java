@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
 import com.duelmasters.DuelMastersServer.Domain.Types.Player;
-import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.FileService;
 
 @Component
 public class MapperDTO {

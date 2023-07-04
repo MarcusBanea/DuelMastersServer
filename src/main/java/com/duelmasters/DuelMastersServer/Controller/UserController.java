@@ -17,7 +17,7 @@ import com.duelmasters.DuelMastersServer.Domain.DTO.CardInCollectionDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.UserCollectionDTO;
 import com.duelmasters.DuelMastersServer.Domain.DTO.UserDTO;
-import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.UserService;
 
 @RestController
 @RequestMapping("/users")
@@ -50,11 +50,11 @@ public class UserController {
 		return new ResponseEntity<>(cardsOfPack, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/getCollection/{userId}")
-	public ResponseEntity<Object> getUserCollection(@PathVariable String userId) {
-		HashMap<String, Integer> collection = userService.getUserCollection(userId);
-		return new ResponseEntity<>(collection, HttpStatus.OK);
-	}
+//	@GetMapping(value = "/getCollection/{userId}")
+//	public ResponseEntity<Object> getUserCollection(@PathVariable String userId) {
+//		HashMap<String, Integer> collection = userService.getUserCollection(userId);
+//		return new ResponseEntity<>(collection, HttpStatus.OK);
+//	}
 	
 	@GetMapping(value = "/getCollectionWithNames/{userId}")
 	public ResponseEntity<Object> getUserCollectionWithNames(@PathVariable String userId) {
@@ -62,7 +62,7 @@ public class UserController {
 		return new ResponseEntity<>(collection, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/getCollectionV2/{userId}")
+	@GetMapping(value = "/getCollection/{userId}")
 	public ResponseEntity<Object> getUserCollectionCards(@PathVariable String userId) {
 		List<CardInCollectionDTO> collection = userService.getUserCollectionCards(userId);
 		return new ResponseEntity<>(collection, HttpStatus.OK);

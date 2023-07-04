@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Pack;
 import com.duelmasters.DuelMastersServer.Repository.PackRepository;
-import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
-import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.CardService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.PackService;
 
 import lombok.AllArgsConstructor;
 

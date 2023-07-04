@@ -2,6 +2,7 @@ package com.duelmasters.DuelMastersServer.Service.Implementation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +20,8 @@ import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Pack;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.User;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
 import com.duelmasters.DuelMastersServer.Repository.UserRepository;
-import com.duelmasters.DuelMastersServer.Service.DAO.PackService;
-import com.duelmasters.DuelMastersServer.Service.DAO.UserService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.PackService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.UserService;
 
 import lombok.AllArgsConstructor;
 
@@ -154,7 +155,44 @@ public class UserServiceImplementation implements UserService {
 		
 		Random random = new Random();
 		
-		List<String> cardIds = new ArrayList<String>(userCollection.keySet());
+		//DEMO
+		
+				List<String> cardIds = new ArrayList<>(Arrays.asList(
+						"6456969b52f47c0df28cb54a",
+						"6456969b52f47c0df28cb565",
+						"6456969b52f47c0df28cb56f",
+						"6456969b52f47c0df28cb58b",
+						"6456969b52f47c0df28cb598",
+						//"6456969b52f47c0df28cb5b8",
+						"6456969b52f47c0df28cb5cf",
+						"6456969b52f47c0df28cb5e0",
+						"6456969b52f47c0df28cb602",
+						"6456969b52f47c0df28cb60b",
+						"6456969b52f47c0df28cb60e",
+						"6456969b52f47c0df28cb615",
+						"6456969b52f47c0df28cb61e",
+						"6456969b52f47c0df28cb623",
+						"6456969b52f47c0df28cb633",
+						"6456969b52f47c0df28cb640",
+						"6456969b52f47c0df28cb641",
+						"6456969b52f47c0df28cb646",
+						"6456969b52f47c0df28cb657",
+						"6456969b52f47c0df28cb665",
+						"6456969b52f47c0df28cb661",
+						"6456969b52f47c0df28cb669",
+						"6456969b52f47c0df28cb68d",
+						"6456969b52f47c0df28cb6b7",
+						"6456969b52f47c0df28cb6b9",
+						"6456969b52f47c0df28cb6cc",
+						"6456969b52f47c0df28cb6cf",
+						"6456969b52f47c0df28cb6e7",
+						"6456969b52f47c0df28cb6ef"
+						));
+				
+				
+				//
+		
+		//List<String> cardIds = new ArrayList<String>(userCollection.keySet());
 		List<String> usedCardIds = new ArrayList<>();
 		
 		while(deck.size() < numberOfCardsInDeck) {

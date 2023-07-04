@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.LoadFile;
-import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.FileService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
@@ -51,17 +51,14 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public LoadFile downloadFile(String id) throws IOException {
-
 		GridFSFile gridFSFile = template.findOne(new Query(Criteria.where("_id").is(id)));
 		LoadFile file = new LoadFile();
-
 		if (gridFSFile != null && gridFSFile.getMetadata() != null) {
 			file.setName(gridFSFile.getFilename());
 			file.setType(gridFSFile.getMetadata().get("_contentType").toString());
 			file.setSize(gridFSFile.getMetadata().get("size").toString());
 			file.setContent(operations.getResource(gridFSFile).getInputStream().readAllBytes());
 		}
-
 		return file;
 	}
 	

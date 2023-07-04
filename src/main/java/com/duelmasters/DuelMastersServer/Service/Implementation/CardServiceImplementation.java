@@ -11,8 +11,8 @@ import com.duelmasters.DuelMastersServer.Domain.DTO.GameCard;
 import com.duelmasters.DuelMastersServer.Domain.DTO.MapperDTO;
 import com.duelmasters.DuelMastersServer.Domain.Entity.cards.Card;
 import com.duelmasters.DuelMastersServer.Repository.CardRepository;
-import com.duelmasters.DuelMastersServer.Service.DAO.CardService;
-import com.duelmasters.DuelMastersServer.Service.DAO.FileService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.CardService;
+import com.duelmasters.DuelMastersServer.Service.Interfaces.FileService;
 
 import lombok.AllArgsConstructor;
 
@@ -103,12 +103,12 @@ public class CardServiceImplementation implements CardService {
 
 	@Override
 	public Card getRandomVeryRareCard() {
-		return cardRepository.getRandomCardWithExactRarity("VeryRare");
+		return cardRepository.getRandomCardWithExactRarity("Very Rare");
 	}
 
 	@Override
 	public Card getRandomSuperRareCard() {
-		return cardRepository.getRandomCardWithExactRarity("SuperRare");
+		return cardRepository.getRandomCardWithExactRarity("Super Rare");
 	}
 
 	@Override
